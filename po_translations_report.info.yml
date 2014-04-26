@@ -3,3 +3,4 @@ type: module
 description: Po Translations Report
 core: 8.x
 package: Multilingual
+configure: po_translations_report_potranslationsreportadmin_form
