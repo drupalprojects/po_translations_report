@@ -8,11 +8,10 @@ class DefaultController extends ControllerBase
 {
 
   /**
-   * hello
-   * @param  string $name
+   * content
    * @return string
    */
-  public function hello($name) {
-    return "Hello " . $name . "!";
+  public function content() {
+    return "Hello";
   }
 }

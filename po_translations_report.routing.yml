@@ -1,8 +1,8 @@
 
 po_translations_report_hello:
-  path: '/po_translations_report/hello/{name}'
+  path: '/po_translations_report'
   defaults:
-    _content: '\Drupal\po_translations_report\Controller\DefaultController::hello'
-    _title: 'po_translations_report Title'
+    _content: '\Drupal\po_translations_report\Controller\DefaultController::content'
+    _title: 'Po Translations Report'
   requirements:
     _permission: 'access content'
