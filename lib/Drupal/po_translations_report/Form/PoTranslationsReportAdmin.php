@@ -29,7 +29,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase
     $form['folder_path'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Folder path'),
-      '#description' => $this->t(''),
+      '#description' => $this->t('Add a path relative to Drupal Root.'),
       '#default_value' => $config->get('folder_path')
     );
     return parent::buildForm($form, $form_state);
