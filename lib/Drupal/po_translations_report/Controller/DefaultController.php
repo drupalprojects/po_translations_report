@@ -12,6 +12,7 @@ class DefaultController extends ControllerBase
    * @return string
    */
   public function content() {
-    return "Hello";
+    $config = $this->config('po_translations_report.admin_config');
+    return $config->get('folder_path');
   }
 }
