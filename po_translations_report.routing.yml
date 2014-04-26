@@ -1,5 +1,5 @@
 
-po_translations_report_hello:
+po_translations_report.content:
   path: '/po_translations_report'
   defaults:
     _content: '\Drupal\po_translations_report\Controller\DefaultController::content'
@@ -7,7 +7,7 @@ po_translations_report_hello:
   requirements:
     _permission: 'access po translations report'
 
-po_translations_report_potranslationsreportadmin_form:
+po_translations_report.admin_form:
   path: '/po_translations_report/settings/PoTranslationsReportAdmin'
   defaults:
     _form: '\Drupal\po_translations_report\Form\PoTranslationsReportAdmin'

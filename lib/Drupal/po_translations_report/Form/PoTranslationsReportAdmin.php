@@ -25,7 +25,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase
    */
   public function buildForm(array $form, array &$form_state)
   {
-    $config = $this->config('po_translations_report.potranslationsreportadmin_config');
+    $config = $this->config('po_translations_report.admin_config');
     $form['folder_path'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Folder path'),
@@ -50,7 +50,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase
   {
     parent::submitForm($form, $form_state);
 
-    $this->config('po_translations_report.potranslationsreportadmin_config')
+    $this->config('po_translations_report.admin_config')
           ->set('folder_path', $form_state['values']['folder_path'])
         ->save();
   }
