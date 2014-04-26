@@ -5,4 +5,4 @@ po_translations_report_hello:
     _content: '\Drupal\po_translations_report\Controller\DefaultController::content'
     _title: 'Po Translations Report'
   requirements:
-    _permission: 'access content'
+    _permission: 'access po translations report'

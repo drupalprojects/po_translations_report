@@ -18,3 +18,14 @@ function po_translations_report_help($path, $arg)
     break;
   }
 }
+
+/**
+ * Implements hook_permission().
+ */
+function po_translations_report_permission() {
+  return array(
+    'access po translations report' => array(
+      'title' => t('Access po translations report'),
+    ),
+  );
+}
