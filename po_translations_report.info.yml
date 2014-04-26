@@ -1,0 +1,5 @@
+name: po_translations_report
+type: module
+description: Po Translations Report
+core: 8.x
+package: Multilingual

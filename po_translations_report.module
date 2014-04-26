@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Contains po_translations_report.module
+ */
+
+/**
+ * Implements hook_help().
+ */
+
+function po_translations_report_help($path, $arg)
+{
+  switch ($path) {
+    case 'admin/help#po_translations_report':
+      $output = 'Po Translations Report';
+      return $output;
+    break;
+  }
+}
