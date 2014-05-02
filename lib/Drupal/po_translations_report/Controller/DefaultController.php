@@ -53,6 +53,26 @@ class DefaultController extends ControllerBase {
             }
             $total_count++;
           }
+          else {
+            // Plural case.
+            $plural = $item->getTranslation();
+            foreach ($item->getSource() as $key => $source) {
+              if (locale_string_is_safe($plural[$key])) {
+                if ($plural[$key] != '') {
+                  $translated_count++;
+                }
+                else {
+                  $untranslated_count++;
+                }
+              }
+              else {
+                $not_allowed_translation_count++;
+              }
+              $total_count++;
+            }
+            //dpm($item->getSource());
+            //dpm($item->getTranslation());
+          }
         }
         $display .= '<br />';
         $display .= $file_name . '__' . $translated_count . '__' . $untranslated_count . '__' . $not_allowed_translation_count . '__' . $total_count;
@@ -65,7 +85,7 @@ class DefaultController extends ControllerBase {
       }
     }
     // Display the results.
-    return  $display;
+    return $display;
   }
 
 }
