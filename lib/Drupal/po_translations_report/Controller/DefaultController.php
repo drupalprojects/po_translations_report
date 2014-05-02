@@ -37,6 +37,7 @@ class DefaultController extends ControllerBase {
         while ($item = $reader->readItem()) {
           //dpm($item->getSource());
           //dpm($item->getTranslation());
+          //dpm(locale_string_is_safe($item->getTranslation()), $item->getTranslation());
         }
       }
     }
