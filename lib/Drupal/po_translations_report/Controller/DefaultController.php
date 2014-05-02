@@ -16,6 +16,9 @@ class DefaultController extends ControllerBase {
     $folder_path = $config->get('folder_path');
     $folder = new \DirectoryIterator($folder_path);
     $po_found = FALSE;
+    $file_name = '';
+    $translated_count = $untranslated_count = $not_allowed_translation_count = $total_count = 0;
+    $display = t('File name') . '__' . t('translated') . '__' . t('Untranslated') . '__' . t('not_allowed translation') . '__' . t('Total');
     foreach ($folder as $fileinfo) {
       if ($fileinfo->isFile() && $fileinfo->getExtension() == 'po') {
         // Flag we found at least one po file in this directory.
@@ -35,18 +38,34 @@ class DefaultController extends ControllerBase {
           throw new \Exception('Missing or malformed header.');
         }
         while ($item = $reader->readItem()) {
-          //dpm($item->getSource());
-          //dpm($item->getTranslation());
-          //dpm(locale_string_is_safe($item->getTranslation()), $item->getTranslation());
+          if (!$item->isPlural()) {
+            $file_name = $fileinfo->getFilename();
+            if (locale_string_is_safe($item->getTranslation())) {
+              if ($item->getTranslation() != '') {
+                $translated_count++;
+              }
+              else {
+                $untranslated_count++;
+              }
+            }
+            else {
+              $not_allowed_translation_count++;
+            }
+            $total_count++;
+          }
         }
+        $display .= '<br />';
+        $display .= $file_name . '__' . $translated_count . '__' . $untranslated_count . '__' . $not_allowed_translation_count . '__' . $total_count;
+      }
+
+      // Handle the case where no po file could be found in the provided path.
+      if (!$po_found) {
+        $message = t('No po was found in %folder', array('%folder' => $folder_path));
+        drupal_set_message($message, 'warning');
       }
     }
-
-    // Handle the case where no po file could be found in the provided path.
-    if (!$po_found) {
-      $message = t('No po was found in %folder', array('%folder' => $folder_path));
-      drupal_set_message($message, 'warning');
-    }
+    // Display the results.
+    return  $display;
   }
 
 }
