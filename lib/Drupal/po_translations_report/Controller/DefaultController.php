@@ -22,7 +22,6 @@ class DefaultController extends ControllerBase {
     $folder_path = $config->get('folder_path');
     $folder = new \DirectoryIterator($folder_path);
     $po_found = FALSE;
-    $display = array();
     foreach ($folder as $fileinfo) {
       if ($fileinfo->isFile() && $fileinfo->getExtension() == 'po') {
         // Flag we found at least one po file in this directory.
@@ -71,8 +70,15 @@ class DefaultController extends ControllerBase {
       }
     }
 
+    return $this->display();
+  }
+
+  /**
+   * Displays the results in a table.
+   */
+  public function display() {
     // Display the results.
-    $display['results'] = array(
+    $display = array(
       '#type' => 'table',
       '#header' => array(
         array('data' => t('File name')),
