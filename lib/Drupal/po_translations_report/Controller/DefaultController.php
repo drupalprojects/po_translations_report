@@ -114,23 +114,23 @@ class DefaultController extends ControllerBase {
   public function getReportResultsSorted($order, $sort) {
     // get default sorted results.
     $results = $this->getReportResults();
-
-    // Obtain the column we need to sort by.
-    foreach ($results as $key => $value) {
-      $order_column[$key] = $value[$order];
+    if (!empty($results)) {
+      // Obtain the column we need to sort by.
+      foreach ($results as $key => $value) {
+        $order_column[$key] = $value[$order];
+      }
+      // Sort data.
+      if ($sort == 'asc') {
+        array_multisort($order_column, SORT_ASC, $results);
+      }
+      elseif ($sort == 'desc') {
+        array_multisort($order_column, SORT_DESC, $results);
+      }
+      // Always place the 'totals' key at the end.
+      $totals = $results['totals'];
+      unset($results['totals']);
+      $results['totals'] = $totals;
     }
-    // Sort data.
-    if ($sort == 'asc') {
-      array_multisort($order_column, SORT_ASC, $results);
-    }
-    elseif ($sort == 'desc') {
-      array_multisort($order_column, SORT_DESC, $results);
-    }
-    // Always place the 'totals' key at the end.
-    $totals = $results['totals'];
-    unset($results['totals']);
-    $results['totals'] = $totals;
-
     return $results;
   }
 
@@ -254,7 +254,7 @@ class DefaultController extends ControllerBase {
     // Only adds total row when it is significant.
     if (!empty($rows)) {
       $total = array(
-        'file_name' => t('Totals'),
+        'file_name' => format_plural(count($rows), 'One file', '@count files'),
         'translated' => 0,
         'untranslated' => 0,
         'not_allowed_translations' => 0,
