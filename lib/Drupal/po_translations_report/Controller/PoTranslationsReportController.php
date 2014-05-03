@@ -5,7 +5,7 @@ namespace Drupal\po_translations_report\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Component\Gettext\PoStreamReader;
 
-class DefaultController extends ControllerBase {
+class PoTranslationsReportController extends ControllerBase {
 
   private $translated_count = 0;
   private $untranslated_count = 0;
