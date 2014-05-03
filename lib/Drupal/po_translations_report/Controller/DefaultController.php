@@ -62,13 +62,17 @@ class DefaultController extends ControllerBase {
             )
         );
       }
-
-      // Handle the case where no po file could be found in the provided path.
-      if (!$po_found) {
-        $message = t('No po was found in %folder', array('%folder' => $folder_path));
-        drupal_set_message($message, 'warning');
-      }
     }
+    // Handle the case where no po file could be found in the provided path.
+    if (!$po_found) {
+      $message = t('No po was found in %folder', array('%folder' => $folder_path));
+      drupal_set_message($message, 'warning');
+    }
+
+    // Now that all result data is filled, add a row with the totals.
+    // Add totals row at the end.
+    $this->addTotalsRow();
+
 
     return $this->display();
   }
@@ -122,6 +126,10 @@ class DefaultController extends ControllerBase {
     elseif ($sort == 'desc') {
       array_multisort($order_column, SORT_DESC, $results);
     }
+    // Always place the 'totals' key at the end.
+    $totals = $results['totals'];
+    unset($results['totals']);
+    $results['totals'] = $totals;
 
     return $results;
   }
@@ -226,10 +234,40 @@ class DefaultController extends ControllerBase {
    * Setter for report_results.
    *
    * Adds a new po file reports as a subarray to report_results.
-   * @return Array.
+   * @argument Array $new_array: array representing a row data.
+   * @argument boolean $totals: TRUE when the row being added is the totals' one.
    */
-  public function setReportResultsSubarray(array $new_array) {
-    $this->report_results[] = $new_array;
+  public function setReportResultsSubarray(array $new_array, $totals = FALSE) {
+    if (!$totals) {
+      $this->report_results[] = $new_array;
+    }
+    else {
+      $this->report_results['totals'] = $new_array;
+    }
+  }
+
+  /**
+   * Add Totals row to results when there are some.
+   */
+  public function addTotalsRow() {
+    $rows = $this->getReportResults();
+    // Only adds total row when it is significant.
+    if (!empty($rows)) {
+      $total = array(
+        'file_name' => t('Totals'),
+        'translated' => 0,
+        'untranslated' => 0,
+        'not_allowed_translations' => 0,
+        'total_per_file' => 0,
+      );
+      foreach ($rows as $row) {
+        $total['translated'] += $row['translated'];
+        $total['untranslated'] += $row['untranslated'];
+        $total['not_allowed_translations'] += $row['not_allowed_translations'];
+        $total['total_per_file'] += $row['total_per_file'];
+      }
+      $this->setReportResultsSubarray($total, TRUE);
+    }
   }
 
 }
