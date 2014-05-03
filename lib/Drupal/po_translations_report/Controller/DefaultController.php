@@ -54,11 +54,11 @@ class DefaultController extends ControllerBase {
         }
 
         $this->setReportResultsSubarray(array(
-          $fileinfo->getFilename(),
-          $this->getTranslatedCount(),
-          $this->getUntranslatedCount(),
-          $this->getNotAllowedTranslatedCount(),
-          $this->getTotalCount(),
+          'file_name' => $fileinfo->getFilename(),
+          'translated' => $this->getTranslatedCount(),
+          'untranslated' => $this->getUntranslatedCount(),
+          'not_allowed_translations' => $this->getNotAllowedTranslatedCount(),
+          'total_per_file' => $this->getTotalCount(),
             )
         );
       }
@@ -74,22 +74,56 @@ class DefaultController extends ControllerBase {
   }
 
   /**
-   * Displays the results in a table.
+   * Displays the results in a sortable table.
+   * @see core/includes/sorttable.inc
    */
   public function display() {
-    // Display the results.
+    // Start by defining the header with field keys needed for sorting.
+    $header = array(
+      array('data' => t('File name'), 'field' => 'file_name', 'sort' => 'asc'),
+      array('data' => t('Translated'), 'field' => 'translated'),
+      array('data' => t('Untranslated'), 'field' => 'untranslated'),
+      array('data' => t('Not Allowed Translations'), 'field' => 'not_allowed_translations'),
+      array('data' => t('Total Per File'), 'field' => 'total_per_file'),
+    );
+    // Get selected order from the request or the default one.
+    $order = tablesort_get_order($header);
+    // Get the field we sort by from the request if any.
+    $sort = tablesort_get_sort($header);
+    // Honor the requested sort.
+    // Please note that we do not run any sql query against the database. The
+    // 'sql' key is simply there for tabelesort needs.
+    $rows = $this->getReportResultsSorted($order['sql'], $sort);
+
+    // Display the sorted results.
     $display = array(
       '#type' => 'table',
-      '#header' => array(
-        array('data' => t('File name')),
-        array('data' => t('Translated')),
-        array('data' => t('Untranslated')),
-        array('data' => t('Not Allowed Translations')),
-        array('data' => t('Total Per File')),
-      ),
-      '#rows' => $this->getReportResults(),
+      '#header' => $header,
+      '#rows' => $rows,
     );
     return $display;
+  }
+
+  /**
+   * Sort the results honoring the requested order.
+   */
+  public function getReportResultsSorted($order, $sort) {
+    // get default sorted results.
+    $results = $this->getReportResults();
+
+    // Obtain the column we need to sort by.
+    foreach ($results as $key => $value) {
+      $order_column[$key] = $value[$order];
+    }
+    // Sort data.
+    if ($sort == 'asc') {
+      array_multisort($order_column, SORT_ASC, $results);
+    }
+    elseif ($sort == 'desc') {
+      array_multisort($order_column, SORT_DESC, $results);
+    }
+
+    return $results;
   }
 
   /**
@@ -190,6 +224,8 @@ class DefaultController extends ControllerBase {
 
   /**
    * Setter for report_results.
+   *
+   * Adds a new po file reports as a subarray to report_results.
    * @return Array.
    */
   public function setReportResultsSubarray(array $new_array) {
