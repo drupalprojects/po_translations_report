@@ -46,42 +46,17 @@ class DefaultController extends ControllerBase {
           if (!$item->isPlural()) {
             $file_name = $fileinfo->getFilename();
             $this->translationReport($item->getTranslation());
-//            if (locale_string_is_safe($item->getTranslation())) {
-//              if ($item->getTranslation() != '') {
-//                $translated_count++;
-//              }
-//              else {
-//                $untranslated_count++;
-//              }
-//            }
-//            else {
-//              $not_allowed_translation_count++;
-//            }
-//            $total_count++;
           }
           else {
             // Plural case.
             $plural = $item->getTranslation();
             foreach ($item->getSource() as $key => $source) {
-
               $this->translationReport($plural[$key]);
-//              if (locale_string_is_safe($plural[$key])) {
-//                if ($plural[$key] != '') {
-//                  $translated_count++;
-//                }
-//                else {
-//                  $untranslated_count++;
-//                }
-//              }
-//              else {
-//                $not_allowed_translation_count++;
-//              }
-//              $total_count++;
             }
           }
         }
         $display .= '<br />';
-        $display .= $file_name . '__' . $this->translated_count . '__' . $this->untranslated_count . '__' . $this->not_allowed_translation_count . '__' . $this->total_count;
+        $display .= $file_name . '__' . $this->getTranslatedCount() . '__' . $this->getUntranslatedCount() . '__' . $this->getNotAllowedTranslatedCount() . '__' . $this->getTotalCount();
       }
 
       // Handle the case where no po file could be found in the provided path.
@@ -94,20 +69,92 @@ class DefaultController extends ControllerBase {
     return $display;
   }
 
+  /**
+   * Update translation report counts.
+   * @param String $translation.
+   */
   public function translationReport($translation) {
 
     if (locale_string_is_safe($translation)) {
       if ($translation != '') {
-        $this->translated_count++;
+        $this->SetTranslatedCount(1);
       }
       else {
-        $this->untranslated_count++;
+        $this->SetUntranslatedCount(1);
       }
     }
     else {
-      $this->not_allowed_translation_count++;
+      $this->SetNotAllowedTranslatedCount(1);
     }
-    $this->total_count++;
+    $this->SetTotalCount(1);
+  }
+
+  /**
+   * Getter for translated_count.
+   * @return Integer.
+   */
+  public function getTranslatedCount() {
+    return $this->translated_count;
+  }
+
+  /**
+   * Getter for untranslated_count.
+   * @return Integer.
+   */
+  public function getUntranslatedCount() {
+    return $this->untranslated_count;
+  }
+
+  /**
+   * Getter for not_allowed_translated_count.
+   * @return Integer.
+   */
+  public function getNotAllowedTranslatedCount() {
+    return $this->not_allowed_translation_count;
+  }
+
+  /**
+   * Getter for total_count.
+   * @return Integer.
+   */
+  public function getTotalCount() {
+    return $this->total_count;
+  }
+
+  /**
+   * Setter for translated_count.
+   * @param Integer $count.
+   * @return Integer.
+   */
+  public function setTranslatedCount($count) {
+    $this->translated_count += $count;
+  }
+
+  /**
+   * Setter for untranslated_count.
+   * @param Integer $count.
+   * @return Integer.
+   */
+  public function setUntranslatedCount($count) {
+    $this->untranslated_count += $count;
+  }
+
+  /**
+   * Setter for not_allowed_translated_count.
+   * @param Integer $count.
+   * @return Integer.
+   */
+  public function setNotAllowedTranslatedCount($count) {
+    $this->not_allowed_translation_count += $count;
+  }
+
+  /**
+   * Setter for total_count.
+   * @param Integer $count.
+   * @return Integer.
+   */
+  public function setTotalCount($count) {
+    $this->total_count += $count;
   }
 
 }
