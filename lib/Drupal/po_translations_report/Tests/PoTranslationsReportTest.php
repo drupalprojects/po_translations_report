@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Provides automated tests for the po_translations_report module.
  */
-class po_translations_reportTest extends WebTestBase {
+class PoTranslationsReportTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
