@@ -11,6 +11,7 @@ class DefaultController extends ControllerBase {
   private $untranslated_count = 0;
   private $not_allowed_translation_count = 0;
   private $total_count = 0;
+  private $report_results = array();
 
   /**
    * content
@@ -21,9 +22,7 @@ class DefaultController extends ControllerBase {
     $folder_path = $config->get('folder_path');
     $folder = new \DirectoryIterator($folder_path);
     $po_found = FALSE;
-    $file_name = '';
-    //$translated_count = $untranslated_count = $not_allowed_translation_count = $total_count = 0;
-    $display = t('File name') . '__' . t('translated') . '__' . t('Untranslated') . '__' . t('not_allowed translation') . '__' . t('Total');
+    $display = array();
     foreach ($folder as $fileinfo) {
       if ($fileinfo->isFile() && $fileinfo->getExtension() == 'po') {
         // Flag we found at least one po file in this directory.
@@ -44,7 +43,6 @@ class DefaultController extends ControllerBase {
         }
         while ($item = $reader->readItem()) {
           if (!$item->isPlural()) {
-            $file_name = $fileinfo->getFilename();
             $this->translationReport($item->getTranslation());
           }
           else {
@@ -55,8 +53,15 @@ class DefaultController extends ControllerBase {
             }
           }
         }
-        $display .= '<br />';
-        $display .= $file_name . '__' . $this->getTranslatedCount() . '__' . $this->getUntranslatedCount() . '__' . $this->getNotAllowedTranslatedCount() . '__' . $this->getTotalCount();
+
+        $this->setReportResultsSubarray(array(
+          $fileinfo->getFilename(),
+          $this->getTranslatedCount(),
+          $this->getUntranslatedCount(),
+          $this->getNotAllowedTranslatedCount(),
+          $this->getTotalCount(),
+            )
+        );
       }
 
       // Handle the case where no po file could be found in the provided path.
@@ -65,7 +70,19 @@ class DefaultController extends ControllerBase {
         drupal_set_message($message, 'warning');
       }
     }
+
     // Display the results.
+    $display['results'] = array(
+      '#type' => 'table',
+      '#header' => array(
+        array('data' => t('File name')),
+        array('data' => t('Translated')),
+        array('data' => t('Untranslated')),
+        array('data' => t('Not Allowed Translations')),
+        array('data' => t('Total Per File')),
+      ),
+      '#rows' => $this->getReportResults(),
+    );
     return $display;
   }
 
@@ -122,6 +139,14 @@ class DefaultController extends ControllerBase {
   }
 
   /**
+   * Getter for report_results.
+   * @return Array.
+   */
+  public function getReportResults() {
+    return $this->report_results;
+  }
+
+  /**
    * Setter for translated_count.
    * @param Integer $count.
    * @return Integer.
@@ -155,6 +180,14 @@ class DefaultController extends ControllerBase {
    */
   public function setTotalCount($count) {
     $this->total_count += $count;
+  }
+
+  /**
+   * Setter for report_results.
+   * @return Array.
+   */
+  public function setReportResultsSubarray(array $new_array) {
+    $this->report_results[] = $new_array;
   }
 
 }
