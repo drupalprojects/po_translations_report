@@ -4,7 +4,7 @@ Do you handle translations via po files and then import them to Drupal?
 
 This module will help you to have reports on your po translations status.
 
-Configure the path to a folder contaigning po files and you'll get some reports
+Configure the path to a folder containing po files and you'll get some reports
 on them.
 
 Reports are made for the number of translated strings, number of untranstaled
