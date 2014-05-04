@@ -28,7 +28,7 @@ database for its reports. It only does on fly reports reading po files.
 REQUIREMENTS
 ------------
 
-Local module is required to reuse the same checks for HTML Allowness.[2]
+Local module is required to reuse the same checks for HTML Allowness.[1]
 
 CONFIGURATION
 -------------
