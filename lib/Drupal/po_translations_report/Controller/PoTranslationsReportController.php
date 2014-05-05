@@ -31,6 +31,8 @@ class PoTranslationsReportController extends ControllerBase {
     $po_found = FALSE;
     foreach ($folder as $fileinfo) {
       if ($fileinfo->isFile() && $fileinfo->getExtension() == 'po') {
+        // Initialize reports for that file.
+        $this->initializeCounts();
         // Flag we found at least one po file in this directory.
         $po_found = TRUE;
         // Instantiate and initialize the stream reader for this file.
@@ -293,6 +295,16 @@ class PoTranslationsReportController extends ControllerBase {
       }
       $this->setReportResultsSubarray($total, TRUE);
     }
+  }
+
+  /**
+   * Initializes the counts to zero.
+   */
+  public function initializeCounts() {
+    $this->translatedCount = 0;
+    $this->untranslatedCount = 0;
+    $this->notAllowedTranslationCount = 0;
+    $this->totalCount = 0;
   }
 
 }
