@@ -28,4 +28,3 @@ function po_translations_report_permission() {
   );
 }
 
-
