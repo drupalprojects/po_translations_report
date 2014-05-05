@@ -14,6 +14,10 @@ use Drupal\simpletest\WebTestBase;
  */
 class PoTranslationsReportTest extends WebTestBase {
 
+  /**
+   * Defines the test.
+   * @return array
+   */
   public static function getInfo() {
     return array(
       'name' => 'Po Translations Report functionality',
@@ -34,28 +38,37 @@ class PoTranslationsReportTest extends WebTestBase {
    */
   function testPoTranslationsReportResults() {
     // Create user with 'access po translations report' permission.
-    $access_user = $this->drupalCreateUser(array('access po translations report'));
+    $permissions = array('access po translations report');
+    $access_user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($access_user);
     \Drupal::config('po_translations_report.admin_config')
         ->set('folder_path', $this->getDataPath())
         ->save();
     // Go to result page.
     $this->drupalGet('po_translations_report');
-    $this->assertRaw($this->getDefaultHTMLResults(), 'Expected html table results');
+    $raw_assert = $this->getDefaultHTMLResults();
+    $this->assertRaw($raw_assert, 'Expected html table results');
   }
 
   /**
    * Tests Admin form.
    */
   function testPoTranslationsReportAdminForm() {
-    // Create user with 'access po translations report' and 'access administration pages' permissions.
-    $access_user = $this->drupalCreateUser(array('access po translations report', 'access administration pages'));
+    // Create user with 'access po translations report' and
+    //'access administration pages' permissions.
+    $permissions = array(
+      'access po translations report',
+      'access administration pages'
+    );
+    $access_user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($access_user);
-    $this->drupalPostForm('po_translations_report/settings/PoTranslationsReportAdmin', array(
+    $path = 'po_translations_report/settings/PoTranslationsReportAdmin';
+    $this->drupalPostForm($path, array(
       'folder_path' => $this->getDataPath(),
         ), t('Save configuration')
     );
-    $this->assertText(t('The configuration options have been saved.'), 'Configure folder path');
+    $text_assert = t('The configuration options have been saved.');
+    $this->assertText($text_assert, 'Configure folder path');
   }
 
   /**
@@ -72,9 +85,15 @@ class PoTranslationsReportTest extends WebTestBase {
    */
   function getDefaultHTMLResults() {
     return '
- <tr class="odd"><td>allowed_not_allowed.po</td><td>1</td><td>0</td><td>1</td><td>2</td> </tr>
- <tr class="even"><td>sample.po</td><td>4</td><td>1</td><td>1</td><td>6</td> </tr>
- <tr class="odd"><td>2 files</td><td>5</td><td>1</td><td>2</td><td>8</td> </tr>
+ <tr class="odd">
+ <td>allowed_not_allowed.po</td><td>1</td><td>0</td><td>1</td><td>2</td> 
+ </tr>
+ <tr class="even">
+ <td>sample.po</td><td>4</td><td>1</td><td>1</td><td>6</td> 
+ </tr>
+ <tr class="odd">
+ <td>2 files</td><td>5</td><td>1</td><td>2</td><td>8</td> 
+ </tr>
 ';
   }
 

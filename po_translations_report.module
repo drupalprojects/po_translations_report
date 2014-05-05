@@ -8,14 +8,12 @@
 /**
  * Implements hook_help().
  */
-
-function po_translations_report_help($path, $arg)
-{
+function po_translations_report_help($path, $arg) {
   switch ($path) {
     case 'admin/help#po_translations_report':
       $output = t('Get translation status of strings that are in po files stored in a folder.');
       return $output;
-    break;
+
   }
 }
 
@@ -29,3 +27,4 @@ function po_translations_report_permission() {
     ),
   );
 }
+

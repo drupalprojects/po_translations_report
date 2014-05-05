@@ -27,7 +27,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Folder path'),
       '#description' => $this->t('Add the complete path to the folder that contains po files.'),
-      '#default_value' => $config->get('folder_path')
+      '#default_value' => $config->get('folder_path'),
     );
     return parent::buildForm($form, $form_state);
   }

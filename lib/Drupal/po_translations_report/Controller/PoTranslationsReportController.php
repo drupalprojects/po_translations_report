@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\po_translations_report\Controller\PoTranslationsReportController.
+ */
+
 namespace Drupal\po_translations_report\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -7,15 +12,15 @@ use Drupal\Component\Gettext\PoStreamReader;
 
 class PoTranslationsReportController extends ControllerBase {
 
-  private $translated_count = 0;
-  private $untranslated_count = 0;
-  private $not_allowed_translation_count = 0;
-  private $total_count = 0;
-  private $report_results = array();
+  protected $translatedCount = 0;
+  protected $untranslatedCount = 0;
+  protected $notAllowedTranslationCount = 0;
+  protected $totalCount = 0;
+  protected $reportResults = array();
 
   /**
-   * content
-   * @return string
+   * Displays the report.
+   * @return HTML table for the results.
    */
   public function content() {
     $config = \Drupal::config('po_translations_report.admin_config');
@@ -32,7 +37,8 @@ class PoTranslationsReportController extends ControllerBase {
 
         try {
           $reader->open();
-        } catch (\Exception $exception) {
+        } 
+        catch (\Exception $exception) {
           throw $exception;
         }
 
@@ -73,13 +79,13 @@ class PoTranslationsReportController extends ControllerBase {
     // Add totals row at the end.
     $this->addTotalsRow();
 
-
     return $this->display();
   }
 
   /**
    * Displays the results in a sortable table.
    * @see core/includes/sorttable.inc
+   * @return array rendered array of results.
    */
   public function display() {
     // Start by defining the header with field keys needed for sorting.
@@ -110,9 +116,11 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Sort the results honoring the requested order.
+   * @return array
+   *   sorted array of results.
    */
   public function getReportResultsSorted($order, $sort) {
-    // get default sorted results.
+    // Get default sorted results.
     $results = $this->getReportResults();
     if (!empty($results)) {
       // Obtain the column we need to sort by.
@@ -136,7 +144,9 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Update translation report counts.
-   * @param String $translation.
+   *
+   * @param string
+   *   $translation contains the translated string.
    */
   public function translationReport($translation) {
 
@@ -155,99 +165,110 @@ class PoTranslationsReportController extends ControllerBase {
   }
 
   /**
-   * Getter for translated_count.
-   * @return Integer.
+   * Getter for translatedCount.
+   * @return integer
+   *   translated count.
    */
   public function getTranslatedCount() {
-    return $this->translated_count;
+    return $this->translatedCount;
   }
 
   /**
-   * Getter for untranslated_count.
-   * @return Integer.
+   * Getter for untranslatedCount.
+   * @return integer
+   *   untranslated count.
    */
   public function getUntranslatedCount() {
-    return $this->untranslated_count;
+    return $this->untranslatedCount;
   }
 
   /**
-   * Getter for not_allowed_translated_count.
-   * @return Integer.
+   * Getter for notAllowedTranslatedCount.
+   * @return integer
+   *   not allowed translation count.
    */
   public function getNotAllowedTranslatedCount() {
-    return $this->not_allowed_translation_count;
+    return $this->notAllowedTranslationCount;
   }
 
   /**
-   * Getter for total_count.
-   * @return Integer.
+   * Getter for totalCount.
+   * @return integer
+   *   total count.
    */
   public function getTotalCount() {
-    return $this->total_count;
+    return $this->totalCount;
   }
 
   /**
-   * Getter for report_results.
-   * @return Array.
+   * Getter for reportResults.
+   * @return array
+   *   reported results.
    */
   public function getReportResults() {
-    return $this->report_results;
+    return $this->reportResults;
   }
 
   /**
-   * Setter for translated_count.
-   * @param Integer $count.
-   * @return Integer.
+   * Setter for translatedCount.
+   *
+   * @param integer $count
+   *   the value to add to translated count.
    */
   public function setTranslatedCount($count) {
-    $this->translated_count += $count;
+    $this->translatedCount += $count;
   }
 
   /**
-   * Setter for untranslated_count.
-   * @param Integer $count.
-   * @return Integer.
+   * Setter for untranslatedCount.
+   *
+   * @param integer $count
+   *   the value to add to untranslated count.
    */
   public function setUntranslatedCount($count) {
-    $this->untranslated_count += $count;
+    $this->untranslatedCount += $count;
   }
 
   /**
-   * Setter for not_allowed_translated_count.
-   * @param Integer $count.
-   * @return Integer.
+   * Setter for notAllowedTranslatedCount.
+   *
+   * @param integer $count
+   *   the value to add to not allowed translated count.
    */
   public function setNotAllowedTranslatedCount($count) {
-    $this->not_allowed_translation_count += $count;
+    $this->notAllowedTranslationCount += $count;
   }
 
   /**
-   * Setter for total_count.
-   * @param Integer $count.
-   * @return Integer.
+   * Setter for totalCount.
+   *
+   * @param integer $count
+   *   the value to add to the total count.
    */
   public function setTotalCount($count) {
-    $this->total_count += $count;
+    $this->totalCount += $count;
   }
 
   /**
-   * Setter for report_results.
+   * Setter for reportResults.
    *
-   * Adds a new po file reports as a subarray to report_results.
-   * @argument Array $new_array: array representing a row data.
-   * @argument boolean $totals: TRUE when the row being added is the totals' one.
+   * Adds a new po file reports as a subarray to reportResults.
+   * @param array $new_array
+   *   array representing a row data.
+   * @param boolean $totals
+   *   TRUE when the row being added is the totals' one.
    */
   public function setReportResultsSubarray(array $new_array, $totals = FALSE) {
     if (!$totals) {
-      $this->report_results[] = $new_array;
+      $this->reportResults[] = $new_array;
     }
     else {
-      $this->report_results['totals'] = $new_array;
+      $this->reportResults['totals'] = $new_array;
     }
   }
 
   /**
-   * Add Totals row to results when there are some.
+   * Adds totals row to results when there are some.
    */
   public function addTotalsRow() {
     $rows = $this->getReportResults();
