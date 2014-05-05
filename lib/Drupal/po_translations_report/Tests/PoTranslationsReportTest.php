@@ -17,6 +17,7 @@ class PoTranslationsReportTest extends WebTestBase {
   /**
    * Defines the test.
    * @return array
+   *   array containing test information.
    */
   public static function getInfo() {
     return array(
@@ -55,10 +56,10 @@ class PoTranslationsReportTest extends WebTestBase {
    */
   function testPoTranslationsReportAdminForm() {
     // Create user with 'access po translations report' and
-    //'access administration pages' permissions.
+    // 'access administration pages' permissions.
     $permissions = array(
       'access po translations report',
-      'access administration pages'
+      'access administration pages',
     );
     $access_user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($access_user);

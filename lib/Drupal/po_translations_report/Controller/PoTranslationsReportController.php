@@ -2,7 +2,8 @@
 
 /**
  * @file
- * Contains \Drupal\po_translations_report\Controller\PoTranslationsReportController.
+ * Contains \Drupal\po_translations_report\Controller\
+ * PoTranslationsReportController.
  */
 
 namespace Drupal\po_translations_report\Controller;
@@ -20,7 +21,8 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Displays the report.
-   * @return HTML table for the results.
+   * @return string
+   *   HTML table for the results.
    */
   public function content() {
     $config = \Drupal::config('po_translations_report.admin_config');
@@ -37,7 +39,7 @@ class PoTranslationsReportController extends ControllerBase {
 
         try {
           $reader->open();
-        } 
+        }
         catch (\Exception $exception) {
           throw $exception;
         }
@@ -85,7 +87,8 @@ class PoTranslationsReportController extends ControllerBase {
   /**
    * Displays the results in a sortable table.
    * @see core/includes/sorttable.inc
-   * @return array rendered array of results.
+   * @return array
+   *   rendered array of results.
    */
   public function display() {
     // Start by defining the header with field keys needed for sorting.
@@ -145,8 +148,8 @@ class PoTranslationsReportController extends ControllerBase {
   /**
    * Update translation report counts.
    *
-   * @param string
-   *   $translation contains the translated string.
+   * @param string $translation
+   *   contains the translated string.
    */
   public function translationReport($translation) {
 
@@ -166,7 +169,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Getter for translatedCount.
-   * @return integer
+   * @return int
    *   translated count.
    */
   public function getTranslatedCount() {
@@ -175,7 +178,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Getter for untranslatedCount.
-   * @return integer
+   * @return int
    *   untranslated count.
    */
   public function getUntranslatedCount() {
@@ -184,7 +187,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Getter for notAllowedTranslatedCount.
-   * @return integer
+   * @return int
    *   not allowed translation count.
    */
   public function getNotAllowedTranslatedCount() {
@@ -193,7 +196,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Getter for totalCount.
-   * @return integer
+   * @return int
    *   total count.
    */
   public function getTotalCount() {
@@ -212,7 +215,7 @@ class PoTranslationsReportController extends ControllerBase {
   /**
    * Setter for translatedCount.
    *
-   * @param integer $count
+   * @param int $count
    *   the value to add to translated count.
    */
   public function setTranslatedCount($count) {
@@ -222,7 +225,7 @@ class PoTranslationsReportController extends ControllerBase {
   /**
    * Setter for untranslatedCount.
    *
-   * @param integer $count
+   * @param int $count
    *   the value to add to untranslated count.
    */
   public function setUntranslatedCount($count) {
@@ -232,7 +235,7 @@ class PoTranslationsReportController extends ControllerBase {
   /**
    * Setter for notAllowedTranslatedCount.
    *
-   * @param integer $count
+   * @param int $count
    *   the value to add to not allowed translated count.
    */
   public function setNotAllowedTranslatedCount($count) {
@@ -242,7 +245,7 @@ class PoTranslationsReportController extends ControllerBase {
   /**
    * Setter for totalCount.
    *
-   * @param integer $count
+   * @param int $count
    *   the value to add to the total count.
    */
   public function setTotalCount($count) {
@@ -253,9 +256,10 @@ class PoTranslationsReportController extends ControllerBase {
    * Setter for reportResults.
    *
    * Adds a new po file reports as a subarray to reportResults.
+   *
    * @param array $new_array
    *   array representing a row data.
-   * @param boolean $totals
+   * @param bool $totals
    *   TRUE when the row being added is the totals' one.
    */
   public function setReportResultsSubarray(array $new_array, $totals = FALSE) {

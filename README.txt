@@ -34,7 +34,8 @@ CONFIGURATION
 -------------
 
 Make sure to have 'access administration pages' permission to be able to
-configure the module at /po_translations_report/settings/PoTranslationsReportAdmin
+configure the module at the following path:
+/po_translations_report/settings/PoTranslationsReportAdmin
 
 Make sur to have 'access po translations report' permission to be able to access
 reports at /po_translations_report
@@ -44,5 +45,6 @@ TESTS
 This module implements some functionnal tests that have the group name
 'Po Translations Report'
 
-[1] https://api.drupal.org/api/drupal/core!modules!locale!locale.module/function/locale_string_is_safe/8
+[1] https://api.drupal.org/api/drupal/core!modules!locale!locale.module/function
+/locale_string_is_safe/8
 [2] https://api.drupal.org/api/drupal/core!includes!tablesort.inc/8
