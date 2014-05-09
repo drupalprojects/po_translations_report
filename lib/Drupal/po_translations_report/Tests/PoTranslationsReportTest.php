@@ -22,7 +22,7 @@ class PoTranslationsReportTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Po Translations Report functionality',
-      'description' => 'Test Unit for module po_translations_report.',
+      'description' => 'Functionnal tests for module po_translations_report.',
       'group' => 'Po Translations Report',
     );
   }
@@ -85,17 +85,30 @@ class PoTranslationsReportTest extends WebTestBase {
    * Gets default html table results.
    */
   function getDefaultHTMLResults() {
-    return '
- <tr class="odd">
- <td>allowed_not_allowed.po</td><td>1</td><td>0</td><td>1</td><td>2</td> 
- </tr>
- <tr class="even">
- <td>sample.po</td><td>4</td><td>1</td><td>1</td><td>6</td> 
- </tr>
- <tr class="odd">
- <td>2 files</td><td>5</td><td>1</td><td>2</td><td>8</td> 
- </tr>
-';
+    return
+      '<tbody>
+              <tr class="odd">
+                      <td>allowed_not_allowed.po</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>1</td>
+                      <td>2</td>
+                  </tr>
+              <tr class="even">
+                      <td>sample.po</td>
+                      <td>4</td>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>6</td>
+                  </tr>
+              <tr class="odd">
+                      <td>2 files</td>
+                      <td>5</td>
+                      <td>1</td>
+                      <td>2</td>
+                      <td>8</td>
+                  </tr>
+          </tbody>';
   }
 
 }
