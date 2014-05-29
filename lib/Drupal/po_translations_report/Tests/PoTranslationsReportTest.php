@@ -54,12 +54,8 @@ class PoTranslationsReportTest extends WebTestBase {
    * Tests Admin form.
    */
   function testPoTranslationsReportAdminForm() {
-    // Create user with 'access po translations report' and
-    // 'access administration pages' permissions.
-    $permissions = array(
-      'access po translations report',
-      'access administration pages',
-    );
+    // Create user with 'administer site configuration' permission.
+    $permissions = array('administer site configuration');
     $this->userCreateAndLogin($permissions);
     $path = 'po_translations_report/settings/PoTranslationsReportAdmin';
     $this->drupalPostForm($path, array(

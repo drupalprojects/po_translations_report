@@ -13,4 +13,4 @@ po_translations_report.admin_form:
     _form: '\Drupal\po_translations_report\Form\PoTranslationsReportAdmin'
     _title: 'Po Translations Report Setting Form'
   requirements:
-    _permission: 'access administration pages'
+    _permission: 'administer site configuration'
