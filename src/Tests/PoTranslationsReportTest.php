@@ -79,7 +79,7 @@ class PoTranslationsReportTest extends WebTestBase {
    */
   function getDataPath() {
     $module_path = drupal_get_path('module', 'po_translations_report');
-    $data_sub_path = '/lib/Drupal/po_translations_report/Tests/data';
+    $data_sub_path = '/src/Tests/data';
     return DRUPAL_ROOT . '/' . $module_path . $data_sub_path;
   }
 
