@@ -86,7 +86,7 @@ class PoTranslationsReportTest extends WebTestBase {
    */
   function getDefaultHTMLResults() {
     return
-      '<tbody>
+    '<tbody>
               <tr class="odd">
                       <td>allowed_not_allowed.po</td>
                       <td>1</td>
@@ -96,17 +96,17 @@ class PoTranslationsReportTest extends WebTestBase {
                   </tr>
               <tr class="even">
                       <td>sample.po</td>
+                      <td>3</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>4</td>
+                  </tr>
+              <tr class="odd">
+                      <td>2 files</td>
                       <td>4</td>
                       <td>1</td>
                       <td>1</td>
                       <td>6</td>
-                  </tr>
-              <tr class="odd">
-                      <td>2 files</td>
-                      <td>5</td>
-                      <td>1</td>
-                      <td>2</td>
-                      <td>8</td>
                   </tr>
           </tbody>';
   }
