@@ -40,8 +40,7 @@ class PoTranslationsReportTest extends WebTestBase {
   function testPoTranslationsReportResults() {
     // Create user with 'access po translations report' permission.
     $permissions = array('access po translations report');
-    $access_user = $this->drupalCreateUser($permissions);
-    $this->drupalLogin($access_user);
+    $this->userCreateAndLogin($permissions);
     \Drupal::config('po_translations_report.admin_config')
         ->set('folder_path', $this->getDataPath())
         ->save();
@@ -61,8 +60,7 @@ class PoTranslationsReportTest extends WebTestBase {
       'access po translations report',
       'access administration pages',
     );
-    $access_user = $this->drupalCreateUser($permissions);
-    $this->drupalLogin($access_user);
+    $this->userCreateAndLogin($permissions);
     $path = 'po_translations_report/settings/PoTranslationsReportAdmin';
     $this->drupalPostForm($path, array(
       'folder_path' => $this->getDataPath(),
@@ -70,6 +68,14 @@ class PoTranslationsReportTest extends WebTestBase {
     );
     $text_assert = t('The configuration options have been saved.');
     $this->assertText($text_assert, 'Configure folder path');
+  }
+
+  /**
+   * Create user with permissions and authenticate them.
+   */
+  function userCreateAndLogin($permissions) {
+    $access_user = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($access_user);
   }
 
   /**
