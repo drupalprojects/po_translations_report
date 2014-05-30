@@ -13,10 +13,34 @@ use Drupal\Component\Gettext\PoStreamReader;
 
 class PoTranslationsReportController extends ControllerBase {
 
+  /**
+   * Count of translated strings per file.
+   * @var int
+   */
   protected $translatedCount = 0;
+
+  /**
+   * Count of untranslated strings per file.
+   * @var int
+   */
   protected $untranslatedCount = 0;
+
+  /**
+   * Count of strings that contain non allowed HTML tags for translation.
+   * @var int
+   */
   protected $notAllowedTranslationCount = 0;
+
+  /**
+   * Count of strings per file.
+   * @var int
+   */
   protected $totalCount = 0;
+
+  /**
+   * Raw results in a form of a php array.
+   * @var array
+   */
   protected $reportResults = array();
 
   /**
