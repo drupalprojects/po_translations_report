@@ -49,7 +49,7 @@ class PoTranslationsReportController extends ControllerBase {
    *   HTML table for the results.
    */
   public function content() {
-    $config = \Drupal::config('po_translations_report.admin_config');
+    $config = $this->config('po_translations_report.admin_config');
     $folder_path = $config->get('folder_path');
     $folder = new \DirectoryIterator($folder_path);
     $po_found = FALSE;
