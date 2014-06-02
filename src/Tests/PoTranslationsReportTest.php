@@ -37,7 +37,7 @@ class PoTranslationsReportTest extends WebTestBase {
   /**
    * Tests po_translations_report results.
    */
-  function testPoTranslationsReportResults() {
+  public function testPoTranslationsReportResults() {
     // Create user with 'access po translations report' permission.
     $permissions = array('access po translations report');
     $this->userCreateAndLogin($permissions);
@@ -53,7 +53,7 @@ class PoTranslationsReportTest extends WebTestBase {
   /**
    * Tests Admin form.
    */
-  function testPoTranslationsReportAdminForm() {
+  public function testPoTranslationsReportAdminForm() {
     // Create user with 'administer site configuration' permission.
     $permissions = array('administer site configuration');
     $this->userCreateAndLogin($permissions);
@@ -69,7 +69,7 @@ class PoTranslationsReportTest extends WebTestBase {
   /**
    * Create user with permissions and authenticate them.
    */
-  function userCreateAndLogin($permissions) {
+  public function userCreateAndLogin($permissions) {
     $access_user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($access_user);
   }
@@ -77,7 +77,7 @@ class PoTranslationsReportTest extends WebTestBase {
   /**
    * Gets data folder path that contains po test files.
    */
-  function getDataPath() {
+  public function getDataPath() {
     $module_path = drupal_get_path('module', 'po_translations_report');
     $data_sub_path = '/src/Tests/data';
     return DRUPAL_ROOT . '/' . $module_path . $data_sub_path;
@@ -86,7 +86,7 @@ class PoTranslationsReportTest extends WebTestBase {
   /**
    * Gets default html table results.
    */
-  function getDefaultHTMLResults() {
+  public function getDefaultHTMLResults() {
     return
     '<tbody>
               <tr class="odd">
