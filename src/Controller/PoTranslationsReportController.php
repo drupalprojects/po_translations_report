@@ -62,14 +62,7 @@ class PoTranslationsReportController extends ControllerBase {
         // Instantiate and initialize the stream reader for this file.
         $reader = new PoStreamReader();
         $reader->setURI($fileinfo->getRealPath());
-
-        try {
-          $reader->open();
-        }
-        catch (\Exception $exception) {
-          throw $exception;
-        }
-
+        $reader->open();
         $header = $reader->getHeader();
         if (!$header) {
           throw new \Exception('Missing or malformed header.');
