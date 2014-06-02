@@ -37,8 +37,8 @@ Make sure to have 'administer site configuration' permission to be able to
 configure the module at the following path:
 /po_translations_report/settings/PoTranslationsReportAdmin
 
-Make sure to have 'access po translations report' permission to be able to access
-reports at /po_translations_report
+Make sure to have 'access po translations report' permission to be able to
+access reports at /po_translations_report
 
 TESTS
 -----
