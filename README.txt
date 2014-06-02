@@ -33,11 +33,11 @@ Local module is required to reuse the same checks for HTML Allowness.[1]
 CONFIGURATION
 -------------
 
-Make sure to have 'access administration pages' permission to be able to
+Make sure to have 'administer site configuration' permission to be able to
 configure the module at the following path:
 /po_translations_report/settings/PoTranslationsReportAdmin
 
-Make sur to have 'access po translations report' permission to be able to access
+Make sure to have 'access po translations report' permission to be able to access
 reports at /po_translations_report
 
 TESTS
