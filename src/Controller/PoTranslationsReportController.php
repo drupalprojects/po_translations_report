@@ -324,4 +324,13 @@ class PoTranslationsReportController extends ControllerBase {
     $this->totalCount = 0;
   }
 
+  /**
+   * Displays string details per po file.
+   * @return string
+   *   List of details.
+   */
+  public function details($file_name, $category) {
+    $output = '';
+    return $output;
+  }
 }
