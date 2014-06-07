@@ -6,7 +6,13 @@ po_translations_report.content:
     _title: 'Po Translations Report'
   requirements:
     _permission: 'access po translations report'
-
+po_translations_report.report_details:
+  path: '/po_translations_report/{file_name}/{category}'
+  defaults:
+    _content: '\Drupal\po_translations_report\Controller\PoTranslationsReportController::details'
+    _title: 'Po Translations Report'
+  requirements:
+    _permission: 'access po translations report'
 po_translations_report.admin_form:
   path: '/po_translations_report/settings/PoTranslationsReportAdmin'
   defaults:
