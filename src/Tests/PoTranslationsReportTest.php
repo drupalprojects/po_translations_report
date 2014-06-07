@@ -67,6 +67,14 @@ class PoTranslationsReportTest extends WebTestBase {
   }
 
   /**
+   * Test results per file.
+   */
+  public function testPoTranslationsReportDetailsPerFile() {
+    $text_assert = '';
+    $this->assertText($text_assert, 'Reports per file');
+  }
+
+  /**
    * Create user with permissions and authenticate them.
    */
   public function userCreateAndLogin($permissions) {
