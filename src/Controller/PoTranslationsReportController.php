@@ -125,15 +125,34 @@ class PoTranslationsReportController extends ControllerBase {
     // Honor the requested sort.
     // Please note that we do not run any sql query against the database. The
     // 'sql' key is simply there for tabelesort needs.
-    $rows = $this->getReportResultsSorted($order['sql'], $sort);
-
+    $rows_sorted = $this->getReportResultsSorted($order['sql'], $sort);
+    $rows_linked = $this->linkifyResults($rows_sorted);
+    ;
     // Display the sorted results.
     $display = array(
       '#type' => 'table',
       '#header' => $header,
-      '#rows' => $rows,
+      '#rows' => $rows_linked,
     );
     return $display;
+  }
+
+  /**
+   * Link all figures to the dedicated details page.
+   * @return array
+   *   linkified array of results.
+   */
+  public function linkifyResults($results) {
+    if (!empty($results)) {
+      foreach ($results as $key => &$result) {
+        if ($key !== 'totals') {
+          $result['translated'] = l($result['translated'], 'po_translations_report/' . $result['file_name'] . '/translated');
+          $result['untranslated'] = l($result['untranslated'], 'po_translations_report/' . $result['file_name'] . '/untranslated');
+          $result['not_allowed_translations'] = l($result['not_allowed_translations'], 'po_translations_report/' . $result['file_name'] . '/not_allowed_translations');
+        }
+      }
+    }
+    return $results;
   }
 
   /**
@@ -333,4 +352,5 @@ class PoTranslationsReportController extends ControllerBase {
     $output = '';
     return $output;
   }
+
 }
