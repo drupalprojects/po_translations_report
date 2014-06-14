@@ -70,8 +70,21 @@ class PoTranslationsReportTest extends WebTestBase {
    * Test results per file.
    */
   public function testPoTranslationsReportDetailsPerFile() {
-    $text_assert = '';
-    $this->assertText($text_assert, 'Reports per file');
+    $this->pass('pass');
+  }
+
+  /**
+   * Test the results page in case of non configured module.
+   */
+  public function testNonConfiguredModuleCaseResults() {
+    $this->pass('pass');
+  }
+
+  /**
+   * Test detailed result page in case of non configured module.
+   */
+  public function testNonConfiguredModuleCaseDetailsPageResult() {
+    $this->pass('pass');
   }
 
   /**
@@ -96,18 +109,18 @@ class PoTranslationsReportTest extends WebTestBase {
    */
   public function getDefaultHTMLResults() {
     return
-    '<tbody>
+        '<tbody>
               <tr class="odd">
                       <td>allowed_not_allowed.po</td>
-                      <td>1</td>
+                      <td><a href="/po_translations_report/allowed_not_allowed.po/translated">1</a></td>
                       <td>0</td>
-                      <td>1</td>
+                      <td><a href="/po_translations_report/allowed_not_allowed.po/not_allowed_translations">1</a></td>
                       <td>2</td>
                   </tr>
               <tr class="even">
                       <td>sample.po</td>
-                      <td>3</td>
-                      <td>1</td>
+                      <td><a href="/po_translations_report/sample.po/translated">3</a></td>
+                      <td><a href="/po_translations_report/sample.po/untranslated">1</a></td>
                       <td>0</td>
                       <td>4</td>
                   </tr>
