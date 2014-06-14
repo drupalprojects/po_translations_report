@@ -438,4 +438,24 @@ class PoTranslationsReportController extends ControllerBase {
     return $results;
   }
 
+  /**
+   * Renders results in form of HTML table.
+   * @param array $details_array
+   * @return string
+   */
+  public function renderDetailsResults($details_array) {
+    // Start by defining the header.
+    $header = array(
+      array('data' => t('Source'), 'field' => 'source'),
+      array('data' => t('Translation'), 'field' => 'translation'),
+    );
+    // Display the detailes results.
+    $display = array(
+      '#type' => 'table',
+      '#header' => $header,
+      '#rows' => $details_array,
+    );
+
+    return $display;
+  }
 }
