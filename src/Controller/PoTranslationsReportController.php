@@ -358,11 +358,31 @@ class PoTranslationsReportController extends ControllerBase {
   /**
    * Displays string details per po file.
    * @return string
-   *   List of details.
+   *   HTML table of details.
    */
   public function details($file_name, $category) {
+    $config = $this->config('po_translations_report.admin_config');
+    $folder_path = $config->get('folder_path');
+    $file = $folder_path . '/' . $file_name;
     $output = '';
-    return $output;
+    // Warn if file doesn't exist or the category is not known.
+    if (!file_exists($file)) {
+      $message = t('%file_name was not found', array('%file_name' => $file_name));
+      drupal_set_message($message, 'error');
+      return $output;
+    }
+    if (!in_array($category, $this->getAllowedDetailsCategries())) {
+      $message = t('%category is not a known category', array('%category' => $category));
+      drupal_set_message($message, 'error');
+      return $output;
+    }
+    $details_array = $this->getDetailsArray($file, $category);
+    if (empty($details_array)) {
+      return $output;
+    }
+    else {
+      return $this->renderDetailsResults($details_array);
+    }
   }
 
   /**
