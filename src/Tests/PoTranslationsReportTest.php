@@ -79,10 +79,10 @@ class PoTranslationsReportTest extends WebTestBase {
     // Go to detail result page.
     $path = 'allowed_not_allowed.po/translated';
     $this->drupalGet('po_translations_report/' . $path);
-    $raw_assert =
-      "<td>Allowed HTML source string</td>
-      <td>&lt;strong&gt;Allowed HTML translation string&lt;/strong&gt;</td>";
-
+    $source = 'Allowed HTML source string';
+    $translation = 'Allowed HTML translation string';
+    $raw_assert = '<td>' . $source . '</td>
+                      <td>&lt;strong&gt;' . $translation . '&lt;/strong&gt;</td>';
     $this->assertRaw($raw_assert, 'Expected translated details results');
   }
 
@@ -97,11 +97,10 @@ class PoTranslationsReportTest extends WebTestBase {
         ->set('folder_path', $this->getDataPath())
         ->save();
     // Go to detail result page.
-    $path = 'allowed_not_allowed.po/not_allowed_translations';
+    $path = 'sample.po/untranslated';
     $this->drupalGet('po_translations_report/' . $path);
-    $raw_assert =
-      "<td>@count hours</td>
-      <td></td>";
+    $raw_assert = '<td>@count hours</td>
+                      <td></td>';
     $this->assertRaw($raw_assert, 'Expected untranslated results');
   }
 
@@ -118,11 +117,12 @@ class PoTranslationsReportTest extends WebTestBase {
     // Go to detail result page.
     $path = 'allowed_not_allowed.po/not_allowed_translations';
     $this->drupalGet('po_translations_report/' . $path);
-    $raw_assert =
-      "<td>&lt;div&gt;Non allowed source string&lt;/div&gt;</td>
-      <td>&lt;div&gt;Non allowed translation string should not be translated&lt;/div&gt;</td>";
+    $source = 'Non allowed source string';
+    $translation = 'Non allowed translation string should not be translated';
+    $raw_assert = '<td>&lt;div&gt;' . $source . '&lt;/div&gt;</td>
+                      <td>&lt;div&gt;' . $translation . '&lt;/div&gt;</td>';
 
-    $this->assertRaw($raw_assert, 'Expected non allowed transltions details');
+    $this->assertRaw($raw_assert, 'Expected non allowed translations details');
   }
 
   /**
