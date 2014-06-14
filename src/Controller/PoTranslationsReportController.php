@@ -152,9 +152,15 @@ class PoTranslationsReportController extends ControllerBase {
     if (!empty($results)) {
       foreach ($results as $key => &$result) {
         if ($key !== 'totals') {
-          $result['translated'] = l($result['translated'], 'po_translations_report/' . $result['file_name'] . '/translated');
-          $result['untranslated'] = l($result['untranslated'], 'po_translations_report/' . $result['file_name'] . '/untranslated');
-          $result['not_allowed_translations'] = l($result['not_allowed_translations'], 'po_translations_report/' . $result['file_name'] . '/not_allowed_translations');
+          if ($result['translated'] > 0) {
+            $result['translated'] = l($result['translated'], 'po_translations_report/' . $result['file_name'] . '/translated');
+          }
+          if ($result['untranslated'] > 0) {
+            $result['untranslated'] = l($result['untranslated'], 'po_translations_report/' . $result['file_name'] . '/untranslated');
+          }
+          if ($result['not_allowed_translations'] > 0) {
+            $result['not_allowed_translations'] = l($result['not_allowed_translations'], 'po_translations_report/' . $result['file_name'] . '/not_allowed_translations');
+          }
         }
       }
     }
