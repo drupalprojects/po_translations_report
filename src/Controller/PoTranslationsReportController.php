@@ -106,7 +106,7 @@ class PoTranslationsReportController extends ControllerBase {
     // Add totals row at the end.
     $this->addTotalsRow();
 
-    return $this->display();
+    return $this->render();
   }
 
   /**
@@ -115,7 +115,7 @@ class PoTranslationsReportController extends ControllerBase {
    * @return array
    *   rendered array of results.
    */
-  public function display() {
+  public function render() {
     // Start by defining the header with field keys needed for sorting.
     $header = array(
       array('data' => t('File name'), 'field' => 'file_name', 'sort' => 'asc'),
@@ -133,7 +133,7 @@ class PoTranslationsReportController extends ControllerBase {
     // 'sql' key is simply there for tabelesort needs.
     $rows_sorted = $this->getReportResultsSorted($order['sql'], $sort);
     $rows_linked = $this->linkifyResults($rows_sorted);
-    ;
+
     // Display the sorted results.
     $display = array(
       '#type' => 'table',
