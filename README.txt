@@ -21,6 +21,15 @@ A last row adds the totals for all po files in the folder.
 Note that results are displayed in a table that is sortable by any column you
 want. This uses Drupal Core tablesort.[2]
 
+Please note that in reports, plural forms are counted as much as existing
+plurals.
+
+For each category (translated, untranslated, not allowed translation), if the
+report is positive, the figure will be linked to a details page where you can
+find the details about the concerned source/translation strings.
+
+These detailed results are also using a tabelsort.[2]
+
 This module does not add any table to the database nor does it relay on the
 database for its reports. It only does on fly reports reading po files.
 
