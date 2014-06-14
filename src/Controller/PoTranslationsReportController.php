@@ -365,4 +365,77 @@ class PoTranslationsReportController extends ControllerBase {
     return $output;
   }
 
+  /**
+   * Get detailed array per a po file.
+   * @param string $file
+   * @param string $category
+   * @return array $results
+   */
+  public function getDetailsArray($file, $category) {
+    $reader = new PoStreamReader();
+    $reader->setURI($file);
+    $reader->open();
+    $results = array();
+    while ($item = $reader->readItem()) {
+      // Singular case.
+      if (!$item->isPlural()) {
+        $source = $item->getSource();
+        $translation = $item->getTranslation();
+        $singular_results = $this->categorize($category, $source, $translation);
+        $results = array_merge($results, $singular_results);
+      }
+      else {
+        // Plural case.
+        $plural = $item->getTranslation();
+        foreach ($item->getSource() as $key => $source) {
+          $translation = $plural[$key];
+          $plural_results = $this->categorize($category, $source, $translation);
+          $results = array_merge($results, $plural_results);
+        }
+      }
+    }
+    return $results;
+  }
+
+  /**
+   * Helper method to categorize strings in a po file.
+   * @param string $category
+   * @param string $source
+   * @param string $translation
+   * @return array $results
+   */
+  public function categorize($category, $source, $translation) {
+    $results = array();
+    $safe_translation = locale_string_is_safe($translation);
+    $translated = $translation != '';
+    switch ($category) {
+      case 'translated':
+        if ($safe_translation && $translated) {
+          $results[] = array(
+            'source' => htmlentities($source),
+            'translation' => htmlentities($translation),
+          );
+        }
+
+        break;
+      case 'untranslated':
+        if ($safe_translation && !$translated) {
+          $results[] = array(
+            'source' => htmlentities($source),
+            'translation' => htmlentities($translation),
+          );
+        }
+        break;
+      case 'not_allowed_translations':
+        if (!$safe_translation) {
+          $results[] = array(
+            'source' => htmlentities($source),
+            'translation' => htmlentities($translation),
+          );
+        }
+        break;
+    }
+    return $results;
+  }
+
 }
