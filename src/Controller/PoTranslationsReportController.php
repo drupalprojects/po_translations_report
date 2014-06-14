@@ -128,10 +128,12 @@ class PoTranslationsReportController extends ControllerBase {
     $order = tablesort_get_order($header);
     // Get the field we sort by from the request if any.
     $sort = tablesort_get_sort($header);
+    // Get default sorted results.
+    $results = $this->getReportResults();
     // Honor the requested sort.
     // Please note that we do not run any sql query against the database. The
     // 'sql' key is simply there for tabelesort needs.
-    $rows_sorted = $this->getReportResultsSorted($order['sql'], $sort);
+    $rows_sorted = $this->getResultsSorted($results, $order['sql'], $sort);
     $rows_linked = $this->linkifyResults($rows_sorted);
 
     // Display the sorted results.
@@ -169,12 +171,13 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Sort the results honoring the requested order.
+   * @param array $results
+   * @param string $order
+   * @param string $sort
    * @return array
    *   sorted array of results.
    */
-  public function getReportResultsSorted($order, $sort) {
-    // Get default sorted results.
-    $results = $this->getReportResults();
+  public function getResultsSorted($results, $order, $sort) {
     if (!empty($results)) {
       // Obtain the column we need to sort by.
       foreach ($results as $key => $value) {
@@ -188,9 +191,11 @@ class PoTranslationsReportController extends ControllerBase {
         array_multisort($order_column, SORT_DESC, $results);
       }
       // Always place the 'totals' key at the end.
-      $totals = $results['totals'];
-      unset($results['totals']);
-      $results['totals'] = $totals;
+      if (isset($results['totals'])) {
+        $totals = $results['totals'];
+        unset($results['totals']);
+        $results['totals'] = $totals;
+      }
     }
     return $results;
   }
@@ -466,14 +471,23 @@ class PoTranslationsReportController extends ControllerBase {
   public function renderDetailsResults($details_array) {
     // Start by defining the header.
     $header = array(
-      array('data' => t('Source'), 'field' => 'source'),
+      array('data' => t('Source'), 'field' => 'source', 'sort' => 'asc'),
       array('data' => t('Translation'), 'field' => 'translation'),
     );
-    // Display the detailes results.
+    // Get selected order from the request or the default one.
+    $order = tablesort_get_order($header);
+    // Get the field we sort by from the request if any.
+    $sort = tablesort_get_sort($header);
+    // Honor the requested sort.
+    // Please note that we do not run any sql query against the database. The
+    // 'sql' key is simply there for tabelesort needs.
+    $rows_sorted = $this->getResultsSorted($details_array, $order['sql'], $sort);
+
+    // Display the details results.
     $display = array(
       '#type' => 'table',
       '#header' => $header,
-      '#rows' => $details_array,
+      '#rows' => $rows_sorted,
     );
 
     return $display;
