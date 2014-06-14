@@ -51,6 +51,12 @@ class PoTranslationsReportController extends ControllerBase {
   public function content() {
     $config = $this->config('po_translations_report.admin_config');
     $folder_path = $config->get('folder_path');
+    // If nothing was configured, tell the user to configure the module.
+    if ($folder_path == '') {
+      $url_path = 'po_translations_report/settings/PoTranslationsReportAdmin';
+      $url = l(t('configuration page'), $url_path);
+      return t('Please configure a directory in !url.', array('!url' => $url));
+    }
     $folder = new \DirectoryIterator($folder_path);
     $po_found = FALSE;
     foreach ($folder as $fileinfo) {
