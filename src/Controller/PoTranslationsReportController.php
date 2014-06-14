@@ -458,4 +458,17 @@ class PoTranslationsReportController extends ControllerBase {
 
     return $display;
   }
+
+  /**
+   * Helper method to restore allowed categories.
+   * @return array of allowed categories.
+   */
+  public function getAllowedDetailsCategries() {
+    return array(
+      'translated',
+      'untranslated',
+      'not_allowed_translations',
+    );
+  }
+
 }
