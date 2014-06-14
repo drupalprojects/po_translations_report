@@ -67,10 +67,62 @@ class PoTranslationsReportTest extends WebTestBase {
   }
 
   /**
-   * Test results per file.
+   * Test results per file for translate category.
    */
-  public function testPoTranslationsReportDetailsPerFile() {
-    $this->pass('pass');
+  public function testDetailsPerFileTranslated() {
+    // Create user with 'access po translations report' permission.
+    $permissions = array('access po translations report');
+    $this->userCreateAndLogin($permissions);
+    \Drupal::config('po_translations_report.admin_config')
+        ->set('folder_path', $this->getDataPath())
+        ->save();
+    // Go to detail result page.
+    $path = 'allowed_not_allowed.po/translated';
+    $this->drupalGet('po_translations_report/' . $path);
+    $raw_assert =
+      "<td>Allowed HTML source string</td>
+      <td>&lt;strong&gt;Allowed HTML translation string&lt;/strong&gt;</td>";
+
+    $this->assertRaw($raw_assert, 'Expected translated details results');
+  }
+
+  /**
+   * Test results per file for untranslate category.
+   */
+  public function testDetailsPerFileUntranslated() {
+    // Create user with 'access po translations report' permission.
+    $permissions = array('access po translations report');
+    $this->userCreateAndLogin($permissions);
+    \Drupal::config('po_translations_report.admin_config')
+        ->set('folder_path', $this->getDataPath())
+        ->save();
+    // Go to detail result page.
+    $path = 'allowed_not_allowed.po/not_allowed_translations';
+    $this->drupalGet('po_translations_report/' . $path);
+    $raw_assert =
+      "<td>@count hours</td>
+      <td></td>";
+    $this->assertRaw($raw_assert, 'Expected untranslated results');
+  }
+
+  /**
+   * Test results per file for non allowed translation category.
+   */
+  public function testDetailsPerFileNonAllowedTranslations() {
+    // Create user with 'access po translations report' permission.
+    $permissions = array('access po translations report');
+    $this->userCreateAndLogin($permissions);
+    \Drupal::config('po_translations_report.admin_config')
+        ->set('folder_path', $this->getDataPath())
+        ->save();
+    // Go to detail result page.
+    $path = 'allowed_not_allowed.po/not_allowed_translations';
+    $this->drupalGet('po_translations_report/' . $path);
+    $raw_assert =
+      "<td>&lt;div&gt;Non allowed source string&lt;/div&gt;</td>
+      <td>&lt;div&gt;Non allowed translation string should not be translated&lt;/div&gt;</td>";
+
+    $this->assertRaw($raw_assert, 'Expected non allowed transltions details');
   }
 
   /**
