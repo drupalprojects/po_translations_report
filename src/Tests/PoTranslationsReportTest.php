@@ -84,7 +84,15 @@ class PoTranslationsReportTest extends WebTestBase {
    * Test detailed result page in case of non configured module.
    */
   public function testNonConfiguredModuleCaseDetailsPageResult() {
-    $this->pass('pass');
+    // Create user with 'access po translations report' permission.
+    $permissions = array('access po translations report');
+    $this->userCreateAndLogin($permissions);
+    // Go to result page without configuring anything.
+    $this->drupalGet('po_translations_report');
+    $url_path = 'po_translations_report/settings/PoTranslationsReportAdmin';
+    $url = l(t('configuration page'), $url_path);
+    $raw = t('Please configure a directory in !url.', array('!url' => $url));
+    $this->assertRaw($raw, 'Found expected result with no configuration');
   }
 
   /**
