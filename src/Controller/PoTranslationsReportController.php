@@ -8,6 +8,7 @@
 
 namespace Drupal\po_translations_report\Controller;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Component\Gettext\PoStreamReader;
 
@@ -116,13 +117,30 @@ class PoTranslationsReportController extends ControllerBase {
    *   rendered array of results.
    */
   public function render() {
+    // Get categories.
+    $categories = $this->getAllowedDetailsCategries();
     // Start by defining the header with field keys needed for sorting.
     $header = array(
-      array('data' => t('File name'), 'field' => 'file_name', 'sort' => 'asc'),
-      array('data' => t('Translated'), 'field' => 'translated'),
-      array('data' => t('Untranslated'), 'field' => 'untranslated'),
-      array('data' => t('Not Allowed Translations'), 'field' => 'not_allowed_translations'),
-      array('data' => t('Total Per File'), 'field' => 'total_per_file'),
+      array(
+        'data' => t('File name'),
+        'field' => 'file_name',
+        'sort' => 'asc'),
+      array(
+        'data' => $categories['translated'],
+        'field' => 'translated',
+        ),
+      array(
+        'data' => $categories['untranslated'],
+        'field' => 'untranslated',
+        ),
+      array(
+        'data' => $categories['not_allowed_translations'],
+        'field' => 'not_allowed_translations',
+        ),
+      array(
+        'data' => t('Total Per File'),
+        'field' => 'total_per_file',
+        ),
     );
     // Get selected order from the request or the default one.
     $order = tablesort_get_order($header);
@@ -361,6 +379,26 @@ class PoTranslationsReportController extends ControllerBase {
   }
 
   /**
+   * Route title callback.
+   *
+   * @param string $file_name
+   * @param string $category
+   *
+   * @return string
+   *   The page title.
+   */
+  public function detailsTitle($file_name, $category) {
+    // Get categories.
+    $categories = $this->getAllowedDetailsCategries();
+    if (in_array($category, array_keys($categories))) {
+      // Get translated category label.
+      $category = $categories[$category];
+    }
+    $title = $file_name . ' : [' . $category . ']';
+    return Xss::filter($title);
+  }
+
+  /**
    * Displays string details per po file.
    * @return string
    *   HTML table of details.
@@ -376,7 +414,7 @@ class PoTranslationsReportController extends ControllerBase {
       drupal_set_message($message, 'error');
       return $output;
     }
-    if (!in_array($category, $this->getAllowedDetailsCategries())) {
+    if (!in_array($category, array_keys($this->getAllowedDetailsCategries()))) {
       $message = t('%category is not a known category', array('%category' => $category));
       drupal_set_message($message, 'error');
       return $output;
@@ -499,9 +537,9 @@ class PoTranslationsReportController extends ControllerBase {
    */
   public function getAllowedDetailsCategries() {
     return array(
-      'translated',
-      'untranslated',
-      'not_allowed_translations',
+      'translated' => t('Translated'),
+      'untranslated' => t('Untranslated'),
+      'not_allowed_translations' => t('Not Allowed Translations'),
     );
   }
 
