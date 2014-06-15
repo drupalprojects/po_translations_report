@@ -13,8 +13,8 @@ HTML (thus you will not be able to import it to the database), number of total
 strings per a po file.
 
 Checking that translations do not contain non allowed HTML uses the same
-verifications [1] as Local module. This way, no surprises will occur when
-importing po files with Local module.
+verifications [1] as Locale module. This way, no surprises will occur when
+importing po files with Locale module.
 
 A last row adds the totals for all po files in the folder.
 
@@ -37,7 +37,7 @@ database for its reports. It only does on fly reports reading po files.
 REQUIREMENTS
 ------------
 
-Local module is required to reuse the same checks for HTML Allowness.[1]
+Locale module is required to reuse the same checks for HTML Allowness.[1]
 
 CONFIGURATION
 -------------
