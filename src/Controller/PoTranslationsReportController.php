@@ -2,8 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\po_translations_report\Controller\
- * PoTranslationsReportController.
+ * Contains \Drupal\po_translations_report\Controller\PoTranslationsReportController.
  */
 
 namespace Drupal\po_translations_report\Controller;
@@ -16,36 +15,42 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Count of translated strings per file.
+   *
    * @var int
    */
   protected $translatedCount = 0;
 
   /**
    * Count of untranslated strings per file.
+   *
    * @var int
    */
   protected $untranslatedCount = 0;
 
   /**
    * Count of strings that contain non allowed HTML tags for translation.
+   *
    * @var int
    */
   protected $notAllowedTranslationCount = 0;
 
   /**
    * Count of strings per file.
+   *
    * @var int
    */
   protected $totalCount = 0;
 
   /**
    * Raw results in a form of a php array.
+   *
    * @var array
    */
   protected $reportResults = array();
 
   /**
    * Displays the report.
+   *
    * @return string
    *   HTML table for the results.
    */
@@ -112,6 +117,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Displays the results in a sortable table.
+   *
    * @see core/includes/sorttable.inc
    * @return array
    *   rendered array of results.
@@ -128,19 +134,19 @@ class PoTranslationsReportController extends ControllerBase {
       array(
         'data' => $categories['translated'],
         'field' => 'translated',
-        ),
+      ),
       array(
         'data' => $categories['untranslated'],
         'field' => 'untranslated',
-        ),
+      ),
       array(
         'data' => $categories['not_allowed_translations'],
         'field' => 'not_allowed_translations',
-        ),
+      ),
       array(
         'data' => t('Total Per File'),
         'field' => 'total_per_file',
-        ),
+      ),
     );
     // Get selected order from the request or the default one.
     $order = tablesort_get_order($header);
@@ -165,6 +171,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Link all figures to the dedicated details page.
+   *
    * @return array
    *   linkified array of results.
    */
@@ -189,6 +196,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Sort the results honoring the requested order.
+   *
    * @param array $results
    * @param string $order
    * @param string $sort
@@ -242,6 +250,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Getter for translatedCount.
+   *
    * @return int
    *   translated count.
    */
@@ -251,6 +260,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Getter for untranslatedCount.
+   *
    * @return int
    *   untranslated count.
    */
@@ -260,6 +270,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Getter for notAllowedTranslatedCount.
+   *
    * @return int
    *   not allowed translation count.
    */
@@ -269,6 +280,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Getter for totalCount.
+   *
    * @return int
    *   total count.
    */
@@ -278,6 +290,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Getter for reportResults.
+   *
    * @return array
    *   reported results.
    */
@@ -400,6 +413,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Displays string details per po file.
+   *
    * @return string
    *   HTML table of details.
    */
@@ -430,6 +444,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Get detailed array per a po file.
+   *
    * @param string $file
    * @param string $category
    * @return array $results
@@ -462,6 +477,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Helper method to categorize strings in a po file.
+   *
    * @param string $category
    * @param string $source
    * @param string $translation
@@ -503,6 +519,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Renders results in form of HTML table.
+   *
    * @param array $details_array
    * @return string
    */
@@ -533,6 +550,7 @@ class PoTranslationsReportController extends ControllerBase {
 
   /**
    * Helper method to restore allowed categories.
+   *
    * @return array of allowed categories.
    */
   public function getAllowedDetailsCategries() {
