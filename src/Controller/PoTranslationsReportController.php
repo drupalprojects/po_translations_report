@@ -120,7 +120,7 @@ class PoTranslationsReportController extends ControllerBase {
    *
    * @see core/includes/sorttable.inc
    * @return array
-   *   rendered array of results.
+   *   Rendered array of results.
    */
   public function render() {
     // Get categories.
@@ -173,7 +173,7 @@ class PoTranslationsReportController extends ControllerBase {
    * Link all figures to the dedicated details page.
    *
    * @return array
-   *   linkified array of results.
+   *   Linkified array of results.
    */
   public function linkifyResults($results) {
     if (!empty($results)) {
@@ -198,10 +198,14 @@ class PoTranslationsReportController extends ControllerBase {
    * Sort the results honoring the requested order.
    *
    * @param array $results
+   *   Array of results.
    * @param string $order
+   *   The asked order.
    * @param string $sort
+   *   The wanted sort.
+   *
    * @return array
-   *   sorted array of results.
+   *   Sorted array of results.
    */
   public function getResultsSorted($results, $order, $sort) {
     if (!empty($results)) {
@@ -230,7 +234,7 @@ class PoTranslationsReportController extends ControllerBase {
    * Update translation report counts.
    *
    * @param string $translation
-   *   contains the translated string.
+   *   Contains the translated string.
    */
   public function translationReport($translation) {
 
@@ -252,7 +256,7 @@ class PoTranslationsReportController extends ControllerBase {
    * Getter for translatedCount.
    *
    * @return int
-   *   translated count.
+   *   Translated count.
    */
   public function getTranslatedCount() {
     return $this->translatedCount;
@@ -262,7 +266,7 @@ class PoTranslationsReportController extends ControllerBase {
    * Getter for untranslatedCount.
    *
    * @return int
-   *   untranslated count.
+   *   Untranslated count.
    */
   public function getUntranslatedCount() {
     return $this->untranslatedCount;
@@ -272,7 +276,7 @@ class PoTranslationsReportController extends ControllerBase {
    * Getter for notAllowedTranslatedCount.
    *
    * @return int
-   *   not allowed translation count.
+   *   Not allowed translation count.
    */
   public function getNotAllowedTranslatedCount() {
     return $this->notAllowedTranslationCount;
@@ -282,7 +286,7 @@ class PoTranslationsReportController extends ControllerBase {
    * Getter for totalCount.
    *
    * @return int
-   *   total count.
+   *   Total count.
    */
   public function getTotalCount() {
     return $this->totalCount;
@@ -292,7 +296,7 @@ class PoTranslationsReportController extends ControllerBase {
    * Getter for reportResults.
    *
    * @return array
-   *   reported results.
+   *   Reported results.
    */
   public function getReportResults() {
     return $this->reportResults;
@@ -302,7 +306,7 @@ class PoTranslationsReportController extends ControllerBase {
    * Setter for translatedCount.
    *
    * @param int $count
-   *   the value to add to translated count.
+   *   The value to add to translated count.
    */
   public function setTranslatedCount($count) {
     $this->translatedCount += $count;
@@ -312,7 +316,7 @@ class PoTranslationsReportController extends ControllerBase {
    * Setter for untranslatedCount.
    *
    * @param int $count
-   *   the value to add to untranslated count.
+   *   The value to add to untranslated count.
    */
   public function setUntranslatedCount($count) {
     $this->untranslatedCount += $count;
@@ -322,7 +326,7 @@ class PoTranslationsReportController extends ControllerBase {
    * Setter for notAllowedTranslatedCount.
    *
    * @param int $count
-   *   the value to add to not allowed translated count.
+   *   The value to add to not allowed translated count.
    */
   public function setNotAllowedTranslatedCount($count) {
     $this->notAllowedTranslationCount += $count;
@@ -332,19 +336,17 @@ class PoTranslationsReportController extends ControllerBase {
    * Setter for totalCount.
    *
    * @param int $count
-   *   the value to add to the total count.
+   *   The value to add to the total count.
    */
   public function setTotalCount($count) {
     $this->totalCount += $count;
   }
 
   /**
-   * Setter for reportResults.
-   *
    * Adds a new po file reports as a subarray to reportResults.
    *
    * @param array $new_array
-   *   array representing a row data.
+   *   Array representing a row data.
    * @param bool $totals
    *   TRUE when the row being added is the totals' one.
    */
@@ -395,7 +397,9 @@ class PoTranslationsReportController extends ControllerBase {
    * Route title callback.
    *
    * @param string $file_name
+   *   The file name.
    * @param string $category
+   *   The category.
    *
    * @return string
    *   The page title.
@@ -446,8 +450,12 @@ class PoTranslationsReportController extends ControllerBase {
    * Get detailed array per a po file.
    *
    * @param string $file
+   *   The file.
    * @param string $category
+   *   The category.
+   *
    * @return array $results
+   *   Array of results.
    */
   public function getDetailsArray($file, $category) {
     $reader = new PoStreamReader();
@@ -479,9 +487,14 @@ class PoTranslationsReportController extends ControllerBase {
    * Helper method to categorize strings in a po file.
    *
    * @param string $category
+   *   The category.
    * @param string $source
+   *   The source string.
    * @param string $translation
+   *   The translation string.
+   *
    * @return array $results
+   *   Array of results;
    */
   public function categorize($category, $source, $translation) {
     $results = array();
@@ -521,7 +534,10 @@ class PoTranslationsReportController extends ControllerBase {
    * Renders results in form of HTML table.
    *
    * @param array $details_array
+   *   Array of details per po file.
+   *
    * @return string
+   *   HTML table represented results.
    */
   public function renderDetailsResults($details_array) {
     // Start by defining the header.
