@@ -207,7 +207,7 @@ class PoTranslationsReportController extends ControllerBase {
    * @return array
    *   Array of results.
    */
-  public function getResultsSorted($results, $order, $sort) {
+  public function getResultsSorted(array $results, $order, $sort) {
     if (!empty($results)) {
       // Obtain the column we need to sort by.
       foreach ($results as $key => $value) {
@@ -541,7 +541,7 @@ class PoTranslationsReportController extends ControllerBase {
    * @return string
    *   HTML table represented results.
    */
-  public function renderDetailsResults($details_array) {
+  public function renderDetailsResults(array $details_array) {
     // Start by defining the header.
     $header = array(
       array('data' => t('Source'), 'field' => 'source', 'sort' => 'asc'),
