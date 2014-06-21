@@ -16,6 +16,7 @@ class PoTranslationsReportTest extends WebTestBase {
 
   /**
    * Defines the test.
+   *
    * @return array
    *   array containing test information.
    */

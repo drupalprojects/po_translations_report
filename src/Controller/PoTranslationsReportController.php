@@ -205,7 +205,7 @@ class PoTranslationsReportController extends ControllerBase {
    *   The wanted sort.
    *
    * @return array
-   *   Sorted array of results.
+   *   Array of results.
    */
   public function getResultsSorted($results, $order, $sort) {
     if (!empty($results)) {
@@ -510,6 +510,7 @@ class PoTranslationsReportController extends ControllerBase {
         }
 
         break;
+
       case 'untranslated':
         if ($safe_translation && !$translated) {
           $results[] = array(
@@ -518,6 +519,7 @@ class PoTranslationsReportController extends ControllerBase {
           );
         }
         break;
+
       case 'not_allowed_translations':
         if (!$safe_translation) {
           $results[] = array(
@@ -567,7 +569,8 @@ class PoTranslationsReportController extends ControllerBase {
   /**
    * Helper method to restore allowed categories.
    *
-   * @return array of allowed categories.
+   * @return array
+   *   Array of allowed categories.
    */
   public function getAllowedDetailsCategries() {
     return array(
