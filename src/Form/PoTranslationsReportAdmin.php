@@ -8,6 +8,7 @@
 namespace Drupal\po_translations_report\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 class PoTranslationsReportAdmin extends ConfigFormBase {
 
@@ -21,7 +22,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('po_translations_report.admin_config');
     $form['folder_path'] = array(
       '#type' => 'textfield',
@@ -35,7 +36,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
     // Check if the path is for valid readable folder.
     $folder_path = $form_state['values']['folder_path'];
@@ -52,7 +53,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
     $this->config('po_translations_report.admin_config')
