@@ -38,6 +38,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
+
     // Check if the path is for valid readable folder.
     $folder_path = $form_state['values']['folder_path'];
     if (!is_dir($folder_path)) {
