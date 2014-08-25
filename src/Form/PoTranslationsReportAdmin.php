@@ -42,11 +42,11 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
     // Check if the path is for valid readable folder.
     $folder_path = $form_state['values']['folder_path'];
     if (!is_dir($folder_path)) {
-      $this->setFormError('folder_path', $form_state, $this->t('%folder_path is not a directory.', array('%folder_path' => $folder_path)));
+      $form_state->setErrorByName('folder_path', $this->t('%folder_path is not a directory.', array('%folder_path' => $folder_path)));
     }
     else {
       if (!is_readable($folder_path)) {
-        $this->setFormError('folder_path', $form_state, $this->t('%folder_path is not a readable directory.', array('%folder_path' => $folder_path)));
+        $form_state->setErrorByName('folder_path', $this->t('%folder_path is not a readable directory.', array('%folder_path' => $folder_path)));
       }
     }
   }
