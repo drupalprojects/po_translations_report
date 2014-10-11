@@ -60,6 +60,10 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
     $this->config('po_translations_report.admin_config')
         ->set('folder_path', $form_state->getValue('folder_path'))
         ->save();
+
+    // Redirect to reports page.
+    $route = 'po_translations_report.content';
+    $form_state->setRedirect($route);
   }
 
 }

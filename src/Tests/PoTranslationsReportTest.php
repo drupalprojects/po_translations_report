@@ -63,7 +63,8 @@ class PoTranslationsReportTest extends WebTestBase {
       'folder_path' => $this->getDataPath(),
         ), t('Save configuration')
     );
-    $text_assert = t('The configuration options have been saved.');
+    // The form should redirect to po_translations_report page.
+    $text_assert = t('Po Translations Report');
     $this->assertText($text_assert, 'Configure folder path');
   }
 
