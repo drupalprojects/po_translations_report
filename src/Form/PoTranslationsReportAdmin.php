@@ -40,7 +40,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
     parent::validateForm($form, $form_state);
 
     // Check if the path is for valid readable folder.
-    $folder_path = $form_state['values']['folder_path'];
+    $folder_path = $form_state->getValue('folder_path');
     if (!is_dir($folder_path)) {
       $form_state->setErrorByName('folder_path', $this->t('%folder_path is not a directory.', array('%folder_path' => $folder_path)));
     }
@@ -58,7 +58,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
     parent::submitForm($form, $form_state);
 
     $this->config('po_translations_report.admin_config')
-        ->set('folder_path', $form_state['values']['folder_path'])
+        ->set('folder_path', $form_state->getValue('folder_path'))
         ->save();
   }
 

@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Component\Gettext\PoStreamReader;
+use Drupal\Core\Url;
 
 class PoTranslationsReportController extends ControllerBase {
 
@@ -60,8 +61,8 @@ class PoTranslationsReportController extends ControllerBase {
     $folder_path = $config->get('folder_path');
     // If nothing was configured, tell the user to configure the module.
     if ($folder_path == '') {
-      $url_path = 'po_translations_report/settings/PoTranslationsReportAdmin';
-      $url = l(t('configuration page'), $url_path);
+      $url_path = Url::fromRoute('po_translations_report.admin_form');
+      $url = \Drupal::l(t('configuration page'), $url_path);
       return t('Please configure a directory in !url.', array('!url' => $url));
     }
     $folder = new \DirectoryIterator($folder_path);
@@ -181,13 +182,28 @@ class PoTranslationsReportController extends ControllerBase {
       foreach ($results as $key => &$result) {
         if ($key !== 'totals') {
           if ($result['translated'] > 0) {
-            $result['translated'] = l($result['translated'], 'po_translations_report/' . $result['file_name'] . '/translated');
+            $route_params = array(
+              'file_name' => $result['file_name'],
+              'category' => 'translated',
+            );
+            $url_path = Url::fromRoute('po_translations_report.report_details', $route_params);
+            $result['translated'] = \Drupal::l($result['translated'], $url_path);
           }
           if ($result['untranslated'] > 0) {
-            $result['untranslated'] = l($result['untranslated'], 'po_translations_report/' . $result['file_name'] . '/untranslated');
+            $route_params = array(
+              'file_name' => $result['file_name'],
+              'category' => 'untranslated',
+            );
+            $url_path = Url::fromRoute('po_translations_report.report_details', $route_params);
+            $result['untranslated'] = \Drupal::l($result['untranslated'], $url_path);
           }
           if ($result['not_allowed_translations'] > 0) {
-            $result['not_allowed_translations'] = l($result['not_allowed_translations'], 'po_translations_report/' . $result['file_name'] . '/not_allowed_translations');
+            $route_params = array(
+              'file_name' => $result['file_name'],
+              'category' => 'not_allowed_translations',
+            );
+            $url_path = Url::fromRoute('po_translations_report.report_details', $route_params);
+            $result['not_allowed_translations'] = \Drupal::l($result['not_allowed_translations'], $url_path);
           }
         }
       }
