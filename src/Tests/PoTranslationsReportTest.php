@@ -8,6 +8,7 @@
 namespace Drupal\po_translations_report\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Url;
 
 /**
  * Provides automated tests for the po_translations_report module.
@@ -56,7 +57,11 @@ class PoTranslationsReportTest extends WebTestBase {
    */
   public function testPoTranslationsReportAdminForm() {
     // Create user with 'administer site configuration' permission.
-    $permissions = array('administer site configuration');
+    // 'access po translations report' permission is needed after redirection.
+    $permissions = array(
+      'administer site configuration',
+      'access po translations report'
+      );
     $this->userCreateAndLogin($permissions);
     $path = 'po_translations_report/settings/PoTranslationsReportAdmin';
     $this->drupalPostForm($path, array(
@@ -136,8 +141,8 @@ class PoTranslationsReportTest extends WebTestBase {
     $this->userCreateAndLogin($permissions);
     // Go to result page without configuring anything.
     $this->drupalGet('po_translations_report');
-    $url_path = 'po_translations_report/settings/PoTranslationsReportAdmin';
-    $url = l(t('configuration page'), $url_path);
+    $url_path = Url::fromRoute('po_translations_report.admin_form');
+    $url = \Drupal::l(t('configuration page'), $url_path);
     $raw = t('Please configure a directory in !url.', array('!url' => $url));
     $this->assertRaw($raw, 'Expected result with no configuration');
   }
