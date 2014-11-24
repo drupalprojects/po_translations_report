@@ -2,14 +2,14 @@
 po_translations_report.content:
   path: '/po_translations_report'
   defaults:
-    _content: '\Drupal\po_translations_report\Controller\PoTranslationsReportController::content'
+    _controller: '\Drupal\po_translations_report\Controller\PoTranslationsReportController::content'
     _title: 'Po Translations Report'
   requirements:
     _permission: 'access po translations report'
 po_translations_report.report_details:
   path: '/po_translations_report/{file_name}/{category}'
   defaults:
-    _content: '\Drupal\po_translations_report\Controller\PoTranslationsReportController::details'
+    _controller: '\Drupal\po_translations_report\Controller\PoTranslationsReportController::details'
     _title_callback: '\Drupal\po_translations_report\Controller\PoTranslationsReportController::detailsTitle'
   requirements:
     _permission: 'access po translations report'
