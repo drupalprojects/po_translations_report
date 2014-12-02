@@ -183,22 +183,22 @@ class PoTranslationsReportTest extends WebTestBase {
    */
   public function getDefaultHTMLResults() {
     return
-        '<tbody>
-              <tr class="odd">
+      '<tbody>
+                      <tr class="odd">
                       <td>allowed_not_allowed.po</td>
                       <td><a href="/po_translations_report/allowed_not_allowed.po/translated">1</a></td>
                       <td>0</td>
                       <td><a href="/po_translations_report/allowed_not_allowed.po/not_allowed_translations">1</a></td>
                       <td>2</td>
                   </tr>
-              <tr class="even">
+                      <tr class="even">
                       <td>sample.po</td>
                       <td><a href="/po_translations_report/sample.po/translated">3</a></td>
                       <td><a href="/po_translations_report/sample.po/untranslated">1</a></td>
                       <td>0</td>
                       <td>4</td>
                   </tr>
-              <tr class="odd">
+                      <tr class="odd">
                       <td>2 files</td>
                       <td>4</td>
                       <td>1</td>

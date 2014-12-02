@@ -63,7 +63,10 @@ class PoTranslationsReportController extends ControllerBase {
     if ($folder_path == '') {
       $url_path = Url::fromRoute('po_translations_report.admin_form');
       $url = \Drupal::l(t('configuration page'), $url_path);
-      return t('Please configure a directory in !url.', array('!url' => $url));
+      return array(
+        '#type' => 'markup',
+        '#markup' => t('Please configure a directory in !url.', array('!url' => $url)),
+      );
     }
     $folder = new \DirectoryIterator($folder_path);
     $po_found = FALSE;
@@ -447,16 +450,25 @@ class PoTranslationsReportController extends ControllerBase {
     if (!file_exists($file)) {
       $message = t('%file_name was not found', array('%file_name' => $file_name));
       drupal_set_message($message, 'error');
-      return $output;
+      return array(
+        '#type' => 'markup',
+        '#markup' => $output,
+      );
     }
     if (!in_array($category, array_keys($this->getAllowedDetailsCategries()))) {
       $message = t('%category is not a known category', array('%category' => $category));
       drupal_set_message($message, 'error');
-      return $output;
+      return array(
+        '#type' => 'markup',
+        '#markup' => $output,
+      );
     }
     $details_array = $this->getDetailsArray($file, $category);
     if (empty($details_array)) {
-      return $output;
+      return array(
+        '#type' => 'markup',
+        '#markup' => $output,
+      );
     }
     else {
       return $this->renderDetailsResults($details_array);
