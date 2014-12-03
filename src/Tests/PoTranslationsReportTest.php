@@ -194,18 +194,18 @@ class PoTranslationsReportTest extends WebTestBase {
     $string = '';
     switch ($option) {
       case 'allowed_not_allowed.po':
-        $string = '<td>allowed_not_allowed.po</td>
-                      <td><a href="/po_translations_report/allowed_not_allowed.po/translated">1</a></td>
+        $string = "<td>allowed_not_allowed.po</td>
+                      <td><a href='/po_translations_report/allowed_not_allowed.po/translated'>1</a></td>
                       <td>0</td>
-                      <td><a href="/po_translations_report/allowed_not_allowed.po/not_allowed_translations">1</a></td>
-                      <td>2</td>';
+                      <td><a href='/po_translations_report/allowed_not_allowed.po/not_allowed_translations'>1</a></td>
+                      <td>2</td>";
         break;
       case 'sample.po':
-        $string = '<td>sample.po</td>
-                      <td><a href="/po_translations_report/sample.po/translated">3</a></td>
-                      <td><a href="/po_translations_report/sample.po/untranslated">1</a></td>
+        $string = "<td>sample.po</td>
+                      <td><a href='/po_translations_report/sample.po/translated'>3</a></td>
+                      <td><a href='/po_translations_report/sample.po/untranslated'>1</a></td>
                       <td>0</td>
-                      <td>4</td>';
+                      <td>4</td>";
         break;
       case 'total':
         $string = '<td>2 files</td>
