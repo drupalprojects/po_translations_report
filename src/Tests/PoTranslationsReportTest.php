@@ -48,12 +48,16 @@ class PoTranslationsReportTest extends WebTestBase {
         ->save();
     // Go to result page.
     $this->drupalGet('po_translations_report');
-    $raw_assert = $this->getDefaultHTMLResults('allowed_not_allowed.po');
-    $this->assertRaw($raw_assert, 'Expected html for allowed_not_allowed.po results');
-    $raw_assert = $this->getDefaultHTMLResults('sample.po');
-    $this->assertRaw($raw_assert, 'Expected html for sample.po results');
-    $raw_assert = $this->getDefaultHTMLResults('total');
-    $this->assertRaw($raw_assert, 'Expected html for total results');
+    // Get expected results.
+    $expected = $this->getDefaultArrayResults();
+    // Test if the results are as expected.
+    for ($i = 1; $i <= 3; $i++) {
+      $this->assertCategory('file_name', $i, $expected);
+      $this->assertCategory('translated', $i, $expected);
+      $this->assertCategory('untranslated', $i, $expected);
+      $this->assertCategory('not_allowed_translations', $i, $expected);
+      $this->assertCategory('total_per_file', $i, $expected);
+    }
   }
 
   /**
@@ -183,41 +187,102 @@ class PoTranslationsReportTest extends WebTestBase {
   }
 
   /**
-   * Gets default html table results.
-   * @param string $option
-   *   The option to test.
+   * Tests the result table with xpath for each of categories.
+   * @param string $category
+   *   The category.
+   * @param integer $index
+   *   The row number we are testing.
+   * @param string $value
+   *   The value.
+   * @param string $link
+   *   The link.
+   * @param array $expected
+   *   Expected result array to compare with.
    *
-   * @return string
-   *   The html that should be found.
+   * @return
    */
-  public function getDefaultHTMLResults($option) {
-    $string = '';
-    switch ($option) {
-      case 'allowed_not_allowed.po':
-        $string = "<td>allowed_not_allowed.po</td>
-                      <td><a href='/po_translations_report/allowed_not_allowed.po/translated'>1</a></td>
-                      <td>0</td>
-                      <td><a href='/po_translations_report/allowed_not_allowed.po/not_allowed_translations'>1</a></td>
-                      <td>2</td>";
-        break;
-      case 'sample.po':
-        $string = "<td>sample.po</td>
-                      <td><a href='/po_translations_report/sample.po/translated'>3</a></td>
-                      <td><a href='/po_translations_report/sample.po/untranslated'>1</a></td>
-                      <td>0</td>
-                      <td>4</td>";
-        break;
-      case 'total':
-        $string = '<td>2 files</td>
-                      <td>4</td>
-                      <td>1</td>
-                      <td>1</td>
-                      <td>6</td>';
-        break;
-      default:
-        break;
+  public function assertCategory($category, $index, $expected) {
+    $value = $this->xpath("//table/tbody/tr[$index]/td[@class='" . $category . "']");
+    $link = $this->xpath("//table/tbody/tr[$index]/td[@class='" . $category . "']/a");
+    // Category value assert.
+    if ($link) {
+      $found_value = $link[0]->__toString();
     }
-    return $string;
+    else {
+      $found_value = (string) $value[0];
+    }
+    $this->assertEqual($found_value, $expected[$index][$category]['value'], 'Line ' . $index . ' has the ' . $category . ' value: ' . $expected[$index][$category]['value']);
+    // Category link assert.
+    if ($link) {
+      $found_href = $link[0]->attributes();
+      $this->assertEqual($found_href, $expected[$index][$category]['href'], 'Line ' . $index . ' has the ' . $category . ' href value: ' . $expected[$index][$category]['href']);
+    }
+  }
+
+  /**
+   * Gets default array results.
+   *
+   * @return array
+   *   The array of expected results..
+   */
+  public function getDefaultArrayResults() {
+    return array(
+      '1' => array(
+        'file_name' => array(
+          'value' => 'allowed_not_allowed.po',
+        ),
+        'translated' => array(
+          'value' => '1',
+          'href' => '/po_translations_report/allowed_not_allowed.po/translated',
+        ),
+        'untranslated' => array(
+          'value' => '0',
+        ),
+        'not_allowed_translations' => array(
+          'value' => '1',
+          'href' => '/po_translations_report/allowed_not_allowed.po/not_allowed_translations',
+        ),
+        'total_per_file' => array(
+          'value' => '2',
+        ),
+      ),
+      '2' => array(
+        'file_name' => array(
+          'value' => 'sample.po',
+        ),
+        'translated' => array(
+          'value' => '3',
+          'href' => '/po_translations_report/sample.po/translated',
+        ),
+        'untranslated' => array(
+          'value' => '1',
+          'href' => '/po_translations_report/sample.po/untranslated',
+        ),
+        'not_allowed_translations' => array(
+          'value' => '0',
+        ),
+        'total_per_file' => array(
+          'value' => '4',
+        ),
+      ),
+      '3' => array(
+        'file_name' => array(
+          'value' => '2 files',
+        ),
+        'translated' => array(
+          'value' => '4',
+        ),
+        'untranslated' => array(
+          'value' => '1',
+        ),
+        'not_allowed_translations' => array(
+          'value' => '1',
+        ),
+        'total_per_file' => array(
+          'value' => '6',
+        ),
+      ),
+    );
   }
 
 }

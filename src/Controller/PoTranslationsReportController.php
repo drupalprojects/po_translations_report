@@ -164,12 +164,13 @@ class PoTranslationsReportController extends ControllerBase {
     // 'sql' key is simply there for tabelesort needs.
     $rows_sorted = $this->getResultsSorted($results, $order['sql'], $sort);
     $rows_linked = $this->linkifyResults($rows_sorted);
+    $rows = $this->addCssClasses($rows_linked);
 
     // Display the sorted results.
     $display = array(
       '#type' => 'table',
       '#header' => $header,
-      '#rows' => $rows_linked,
+      '#rows' => $rows,
     );
     return $display;
   }
@@ -178,7 +179,7 @@ class PoTranslationsReportController extends ControllerBase {
    * Link all figures to the dedicated details page.
    *
    * @return array
-   *   Linkified array of results.
+   *   Sorted array of results.
    */
   public function linkifyResults($results) {
     if (!empty($results)) {
@@ -208,6 +209,26 @@ class PoTranslationsReportController extends ControllerBase {
             $url_path = Url::fromRoute('po_translations_report.report_details', $route_params);
             $result['not_allowed_translations'] = \Drupal::l($result['not_allowed_translations'], $url_path);
           }
+        }
+      }
+    }
+    return $results;
+  }
+
+  /**
+   * Adds css classes to results.
+   *
+   * @return array
+   *   Linkified array of results.
+   */
+  public function addCssClasses($results) {
+    if (!empty($results)) {
+      foreach ($results as $key => &$result) {
+        foreach ($result as $result_key => &$result_value) {
+          $result_value = array(
+            'data' => $result_value,
+            'class' => $result_key,
+          );
         }
       }
     }
