@@ -215,7 +215,7 @@ class PoTranslationsReportTest extends WebTestBase {
     // Category link assert.
     if ($link) {
       $attributes = $link[0]->attributes();
-      $found_href = $attributes['href'];
+      $found_href = (string) $attributes['href'];
       $this->assertEqual($found_href, $expected[$index][$category]['href'], 'Line ' . $index . ' has the ' . $category . ' href value: ' . $expected[$index][$category]['href']);
     }
   }
