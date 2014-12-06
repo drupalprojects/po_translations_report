@@ -209,13 +209,12 @@ class PoTranslationsReportTest extends WebTestBase {
       $found_value = $link[0]->__toString();
     }
     else {
-      $found_value = (string) $value[0];
+      $found_value = $value[0]->__toString();
     }
     $this->assertEqual($found_value, $expected[$index][$category]['value'], 'Line ' . $index . ' has the ' . $category . ' value: ' . $expected[$index][$category]['value']);
     // Category link assert.
     if ($link) {
-      $attributes = $link[0]->attributes();
-      $found_href = (string) $attributes['href'];
+      $found_href = $link[0]->attributes()['href']->__toString();
       $this->assertEqual($found_href, $expected[$index][$category]['href'], 'Line ' . $index . ' has the ' . $category . ' href value: ' . $expected[$index][$category]['href']);
     }
   }
