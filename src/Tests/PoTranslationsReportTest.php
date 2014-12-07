@@ -215,7 +215,9 @@ class PoTranslationsReportTest extends WebTestBase {
     // Category link assert.
     if ($link) {
       $found_href = $link[0]->attributes()['href']->__toString();
-      $this->assertEqual($found_href, $expected[$index][$category]['href'], 'Line ' . $index . ' has the ' . $category . ' href value: ' . $expected[$index][$category]['href'] . ' and the expected one is: ' . $found_href);
+      // Tests on drupal.org expect links to start with /checkout/
+      $found_href = str_replace('/checkout', '', $found_href);
+      $this->assertEqual($found_href, $expected[$index][$category]['href'], 'Line ' . $index . ' has the ' . $category . ' href value: ' . $expected[$index][$category]['href']);
     }
   }
 
