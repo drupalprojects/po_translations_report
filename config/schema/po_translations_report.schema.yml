@@ -1,0 +1,9 @@
+# Schema for the configuration files of the Po Translations Report module.
+
+po_translations_report.admin_config:
+  type: mapping
+  label: 'Po Translations Report settings'
+  mapping:
+    folder_path:
+      type: string
+      label: 'Path to the directory with po files'
