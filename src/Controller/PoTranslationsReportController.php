@@ -408,7 +408,7 @@ class PoTranslationsReportController extends ControllerBase {
     // Only adds total row when it is significant.
     if (!empty($rows)) {
       $total = array(
-        'file_name' => format_plural(count($rows), 'One file', '@count files'),
+        'file_name' => \Drupal::translation()->formatPlural(count($rows), 'One file', '@count files'),
         'translated' => 0,
         'untranslated' => 0,
         'not_allowed_translations' => 0,
