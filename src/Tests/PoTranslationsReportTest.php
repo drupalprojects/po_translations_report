@@ -14,6 +14,10 @@ use Drupal\Core\Url;
  * Provides automated tests for the po_translations_report module.
  */
 class PoTranslationsReportTest extends WebTestBase {
+  /**
+   * Name of the config that may be edited.
+   */
+  const CONFIGNAME = 'po_translations_report.admin_config';
 
   /**
    * Defines the test.
@@ -43,7 +47,7 @@ class PoTranslationsReportTest extends WebTestBase {
     // Create user with 'access po translations report' permission.
     $permissions = array('access po translations report');
     $this->userCreateAndLogin($permissions);
-    \Drupal::config('po_translations_report.admin_config')
+    \Drupal::configFactory()->getEditable(static::CONFIGNAME)
         ->set('folder_path', $this->getDataPath())
         ->save();
     // Go to result page.
@@ -88,7 +92,7 @@ class PoTranslationsReportTest extends WebTestBase {
     // Create user with 'access po translations report' permission.
     $permissions = array('access po translations report');
     $this->userCreateAndLogin($permissions);
-    \Drupal::config('po_translations_report.admin_config')
+    \Drupal::configFactory()->getEditable(static::CONFIGNAME)
         ->set('folder_path', $this->getDataPath())
         ->save();
     // Go to detail result page.
@@ -108,7 +112,7 @@ class PoTranslationsReportTest extends WebTestBase {
     // Create user with 'access po translations report' permission.
     $permissions = array('access po translations report');
     $this->userCreateAndLogin($permissions);
-    \Drupal::config('po_translations_report.admin_config')
+    \Drupal::configFactory()->getEditable(static::CONFIGNAME)
         ->set('folder_path', $this->getDataPath())
         ->save();
     // Go to detail result page.
@@ -126,7 +130,7 @@ class PoTranslationsReportTest extends WebTestBase {
     // Create user with 'access po translations report' permission.
     $permissions = array('access po translations report');
     $this->userCreateAndLogin($permissions);
-    \Drupal::config('po_translations_report.admin_config')
+    \Drupal::configFactory()->getEditable(static::CONFIGNAME)
         ->set('folder_path', $this->getDataPath())
         ->save();
     // Go to detail result page.

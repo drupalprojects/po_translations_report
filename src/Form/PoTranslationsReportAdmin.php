@@ -11,6 +11,17 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 class PoTranslationsReportAdmin extends ConfigFormBase {
+  /**
+   * Name of the config being edited.
+   */
+  const CONFIGNAME = 'po_translations_report.admin_config';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return array(static::CONFIGNAME);
+  }
 
   /**
    * {@inheritdoc}
@@ -23,7 +34,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('po_translations_report.admin_config');
+    $config = $this->config(static::CONFIGNAME);
     $form['folder_path'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Folder path'),
@@ -57,7 +68,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    $this->config('po_translations_report.admin_config')
+    $this->config(static::CONFIGNAME)
         ->set('folder_path', $form_state->getValue('folder_path'))
         ->save();
 
