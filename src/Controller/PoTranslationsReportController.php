@@ -603,7 +603,7 @@ class PoTranslationsReportController extends ControllerBase {
     $sort = tablesort_get_sort($header);
     // Honor the requested sort.
     // Please note that we do not run any sql query against the database. The
-    // 'sql' key is simply there for tabelesort needs.
+    // 'sql' key is simply there for tablesort needs.
     $rows_sorted = $this->getResultsSorted($details_array, $order['sql'], $sort);
 
     // Display the details results.

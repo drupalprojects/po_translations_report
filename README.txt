@@ -51,7 +51,7 @@ access reports at /po_translations_report
 
 TESTS
 -----
-This module implements some functionnal tests that have the group name
+This module implements some functional tests that have the group name
 'Po Translations Report'
 
 [1] https://api.drupal.org/api/drupal/core!modules!locale!locale.module/function

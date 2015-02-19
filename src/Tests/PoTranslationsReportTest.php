@@ -11,27 +11,15 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Url;
 
 /**
- * Provides automated tests for the po_translations_report module.
+ * Functional tests for module po_translations_report.
+ *
+ * @group Po Translations Report
  */
 class PoTranslationsReportTest extends WebTestBase {
   /**
    * Name of the config that may be edited.
    */
   const CONFIGNAME = 'po_translations_report.admin_config';
-
-  /**
-   * Defines the test.
-   *
-   * @return array
-   *   array containing test information.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Po Translations Report functionality',
-      'description' => 'Functionnal tests for module po_translations_report.',
-      'group' => 'Po Translations Report',
-    );
-  }
 
   /**
    * Modules to enable.
@@ -196,14 +184,8 @@ class PoTranslationsReportTest extends WebTestBase {
    *   The category.
    * @param integer $index
    *   The row number we are testing.
-   * @param string $value
-   *   The value.
-   * @param string $link
-   *   The link.
    * @param array $expected
    *   Expected result array to compare with.
-   *
-   * @return
    */
   public function assertCategory($category, $index, $expected) {
     $value = $this->xpath("//table/tbody/tr[$index]/td[@class='" . $category . "']");
