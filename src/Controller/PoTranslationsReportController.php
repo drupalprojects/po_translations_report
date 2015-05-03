@@ -8,7 +8,7 @@
 namespace Drupal\po_translations_report\Controller;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Component\Gettext\PoStreamReader;
 use Drupal\Core\Url;
@@ -554,8 +554,8 @@ class PoTranslationsReportController extends ControllerBase {
       case 'translated':
         if ($safe_translation && $translated) {
           $results[] = array(
-            'source' => String::checkPlain($source),
-            'translation' => String::checkPlain($translation),
+            'source' => SafeMarkup::checkPlain($source),
+            'translation' => SafeMarkup::checkPlain($translation),
           );
         }
 
@@ -564,8 +564,8 @@ class PoTranslationsReportController extends ControllerBase {
       case 'untranslated':
         if ($safe_translation && !$translated) {
           $results[] = array(
-            'source' => String::checkPlain($source),
-            'translation' => String::checkPlain($translation),
+            'source' => SafeMarkup::checkPlain($source),
+            'translation' => SafeMarkup::checkPlain($translation),
           );
         }
         break;
@@ -573,8 +573,8 @@ class PoTranslationsReportController extends ControllerBase {
       case 'not_allowed_translations':
         if (!$safe_translation) {
           $results[] = array(
-            'source' => String::checkPlain($source),
-            'translation' => String::checkPlain($translation),
+            'source' => SafeMarkup::checkPlain($source),
+            'translation' => SafeMarkup::checkPlain($translation),
           );
         }
         break;
