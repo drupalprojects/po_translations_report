@@ -7,41 +7,14 @@
 
 namespace Drupal\po_translations_report\Controller;
 
-use Drupal\Component\Utility\Xss;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Component\Gettext\PoStreamReader;
 use Drupal\Core\Url;
+use Drupal\po_translations_report\PoReporter;
 
 class PoTranslationsReportController extends ControllerBase {
-
-  /**
-   * Count of translated strings per file.
-   *
-   * @var int
-   */
-  protected $translatedCount = 0;
-
-  /**
-   * Count of untranslated strings per file.
-   *
-   * @var int
-   */
-  protected $untranslatedCount = 0;
-
-  /**
-   * Count of strings that contain non allowed HTML tags for translation.
-   *
-   * @var int
-   */
-  protected $notAllowedTranslationCount = 0;
-
-  /**
-   * Count of strings per file.
-   *
-   * @var int
-   */
-  protected $totalCount = 0;
 
   /**
    * Raw results in a form of a php array.
@@ -49,6 +22,31 @@ class PoTranslationsReportController extends ControllerBase {
    * @var array
    */
   protected $reportResults = array();
+
+  /**
+   * PoReporter service.
+   *
+   * @var Drupal\po_translations_report\PoReporter
+   */
+  protected $poReporter;
+
+  /**
+   * Constructor.
+   *
+   * @param PoReporter $poReporter
+   */
+  public function __construct(PoReporter $poReporter) {
+    $this->poReporter = $poReporter;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+        $container->get('po_translations_report.po_reporter')
+    );
+  }
 
   /**
    * Displays the report.
@@ -72,39 +70,11 @@ class PoTranslationsReportController extends ControllerBase {
     $po_found = FALSE;
     foreach ($folder as $fileinfo) {
       if ($fileinfo->isFile() && $fileinfo->getExtension() == 'po') {
-        // Initialize reports for that file.
-        $this->initializeCounts();
+        $uri = $fileinfo->getRealPath();
+        $subresults = $this->poReporter->PoReport($uri);
+        $this->setReportResultsSubarray($subresults);
         // Flag we found at least one po file in this directory.
         $po_found = TRUE;
-        // Instantiate and initialize the stream reader for this file.
-        $reader = new PoStreamReader();
-        $reader->setURI($fileinfo->getRealPath());
-        $reader->open();
-        $header = $reader->getHeader();
-        if (!$header) {
-          throw new \Exception('Missing or malformed header.');
-        }
-        while ($item = $reader->readItem()) {
-          if (!$item->isPlural()) {
-            $this->translationReport($item->getTranslation());
-          }
-          else {
-            // Plural case.
-            $plural = $item->getTranslation();
-            foreach ($item->getSource() as $key => $source) {
-              $this->translationReport($plural[$key]);
-            }
-          }
-        }
-
-        $this->setReportResultsSubarray(array(
-          'file_name' => $fileinfo->getFilename(),
-          'translated' => $this->getTranslatedCount(),
-          'untranslated' => $this->getUntranslatedCount(),
-          'not_allowed_translations' => $this->getNotAllowedTranslatedCount(),
-          'total_per_file' => $this->getTotalCount(),
-            )
-        );
       }
     }
     // Handle the case where no po file could be found in the provided path.
@@ -272,68 +242,6 @@ class PoTranslationsReportController extends ControllerBase {
   }
 
   /**
-   * Update translation report counts.
-   *
-   * @param string $translation
-   *   Contains the translated string.
-   */
-  public function translationReport($translation) {
-
-    if (locale_string_is_safe($translation)) {
-      if ($translation != '') {
-        $this->SetTranslatedCount(1);
-      }
-      else {
-        $this->SetUntranslatedCount(1);
-      }
-    }
-    else {
-      $this->SetNotAllowedTranslatedCount(1);
-    }
-    $this->SetTotalCount(1);
-  }
-
-  /**
-   * Getter for translatedCount.
-   *
-   * @return int
-   *   Translated count.
-   */
-  public function getTranslatedCount() {
-    return $this->translatedCount;
-  }
-
-  /**
-   * Getter for untranslatedCount.
-   *
-   * @return int
-   *   Untranslated count.
-   */
-  public function getUntranslatedCount() {
-    return $this->untranslatedCount;
-  }
-
-  /**
-   * Getter for notAllowedTranslatedCount.
-   *
-   * @return int
-   *   Not allowed translation count.
-   */
-  public function getNotAllowedTranslatedCount() {
-    return $this->notAllowedTranslationCount;
-  }
-
-  /**
-   * Getter for totalCount.
-   *
-   * @return int
-   *   Total count.
-   */
-  public function getTotalCount() {
-    return $this->totalCount;
-  }
-
-  /**
    * Getter for reportResults.
    *
    * @return array
@@ -341,46 +249,6 @@ class PoTranslationsReportController extends ControllerBase {
    */
   public function getReportResults() {
     return $this->reportResults;
-  }
-
-  /**
-   * Setter for translatedCount.
-   *
-   * @param int $count
-   *   The value to add to translated count.
-   */
-  public function setTranslatedCount($count) {
-    $this->translatedCount += $count;
-  }
-
-  /**
-   * Setter for untranslatedCount.
-   *
-   * @param int $count
-   *   The value to add to untranslated count.
-   */
-  public function setUntranslatedCount($count) {
-    $this->untranslatedCount += $count;
-  }
-
-  /**
-   * Setter for notAllowedTranslatedCount.
-   *
-   * @param int $count
-   *   The value to add to not allowed translated count.
-   */
-  public function setNotAllowedTranslatedCount($count) {
-    $this->notAllowedTranslationCount += $count;
-  }
-
-  /**
-   * Setter for totalCount.
-   *
-   * @param int $count
-   *   The value to add to the total count.
-   */
-  public function setTotalCount($count) {
-    $this->totalCount += $count;
   }
 
   /**
@@ -422,16 +290,6 @@ class PoTranslationsReportController extends ControllerBase {
       }
       $this->setReportResultsSubarray($total, TRUE);
     }
-  }
-
-  /**
-   * Initializes the counts to zero.
-   */
-  public function initializeCounts() {
-    $this->translatedCount = 0;
-    $this->untranslatedCount = 0;
-    $this->notAllowedTranslationCount = 0;
-    $this->totalCount = 0;
   }
 
   /**
