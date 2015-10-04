@@ -16,6 +16,7 @@ use Drupal\Core\Url;
  * @group Po Translations Report
  */
 class PoTranslationsReportTest extends WebTestBase {
+
   /**
    * Name of the config that may be edited.
    */

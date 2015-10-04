@@ -39,6 +39,11 @@ class PoTranslationsReportController extends ControllerBase {
   protected $poDetailsReporter;
 
   /**
+   * Name of the config being edited.
+   */
+  const CONFIGNAME = 'po_translations_report.admin_config';
+
+  /**
    * Constructor.
    *
    * @param PoReporter $poReporter
@@ -64,7 +69,7 @@ class PoTranslationsReportController extends ControllerBase {
    *   HTML table for the results.
    */
   public function content() {
-    $config = $this->config('po_translations_report.admin_config');
+    $config = $this->config(static::CONFIGNAME);
     $folder_path = $config->get('folder_path');
     // If nothing was configured, tell the user to configure the module.
     if ($folder_path == '') {
@@ -330,7 +335,7 @@ class PoTranslationsReportController extends ControllerBase {
    *   HTML table of details.
    */
   public function details($file_name, $category) {
-    $config = $this->config('po_translations_report.admin_config');
+    $config = $this->config(static::CONFIGNAME);
     $folder_path = $config->get('folder_path');
     $filepath = $folder_path . '/' . $file_name;
     $output = '';

@@ -13,6 +13,5 @@ function po_translations_report_help($route_name, \Drupal\Core\Routing\RouteMatc
     case 'help.page.po_translations_report':
       $output = t('Get translation status of strings that are in po files stored in a folder.');
       return $output;
-
   }
 }
