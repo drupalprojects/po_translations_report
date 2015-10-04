@@ -1,3 +1,5 @@
 services:
   po_translations_report.po_reporter:
     class: Drupal\po_translations_report\PoReporter
+  po_translations_report.po_details_reporter:
+    class: Drupal\po_translations_report\PoDetailsReporter

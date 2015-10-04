@@ -13,6 +13,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 use Drupal\po_translations_report\PoReporter;
+use Drupal\po_translations_report\PoDetailsReporter;
 
 class PoTranslationsReportController extends ControllerBase {
 
@@ -31,12 +32,20 @@ class PoTranslationsReportController extends ControllerBase {
   protected $poReporter;
 
   /**
+   * PoReporter service.
+   *
+   * @var Drupal\po_translations_report\PoDetailsReporter
+   */
+  protected $poDetailsReporter;
+
+  /**
    * Constructor.
    *
    * @param PoReporter $poReporter
    */
-  public function __construct(PoReporter $poReporter) {
+  public function __construct(PoReporter $poReporter, PoDetailsReporter $poDetailsReporter) {
     $this->poReporter = $poReporter;
+    $this->poDetailsReporter = $poDetailsReporter;
   }
 
   /**
@@ -44,7 +53,7 @@ class PoTranslationsReportController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-        $container->get('po_translations_report.po_reporter')
+        $container->get('po_translations_report.po_reporter'), $container->get('po_translations_report.po_details_reporter')
     );
   }
 
@@ -323,10 +332,10 @@ class PoTranslationsReportController extends ControllerBase {
   public function details($file_name, $category) {
     $config = $this->config('po_translations_report.admin_config');
     $folder_path = $config->get('folder_path');
-    $file = $folder_path . '/' . $file_name;
+    $filepath = $folder_path . '/' . $file_name;
     $output = '';
     // Warn if file doesn't exist or the category is not known.
-    if (!file_exists($file)) {
+    if (!file_exists($filepath)) {
       $message = t('%file_name was not found', array('%file_name' => $file_name));
       drupal_set_message($message, 'error');
       return array(
@@ -342,7 +351,7 @@ class PoTranslationsReportController extends ControllerBase {
         '#markup' => $output,
       );
     }
-    $details_array = $this->getDetailsArray($file, $category);
+    $details_array = $this->poDetailsReporter->poReportDetails($filepath, $category);
     if (empty($details_array)) {
       return array(
         '#type' => 'markup',
@@ -352,92 +361,6 @@ class PoTranslationsReportController extends ControllerBase {
     else {
       return $this->renderDetailsResults($details_array);
     }
-  }
-
-  /**
-   * Get detailed array per a po file.
-   *
-   * @param string $file
-   *   The file.
-   * @param string $category
-   *   The category.
-   *
-   * @return array $results
-   *   Array of results.
-   */
-  public function getDetailsArray($file, $category) {
-    $reader = new PoStreamReader();
-    $reader->setURI($file);
-    $reader->open();
-    $results = array();
-    while ($item = $reader->readItem()) {
-      // Singular case.
-      if (!$item->isPlural()) {
-        $source = $item->getSource();
-        $translation = $item->getTranslation();
-        $singular_results = $this->categorize($category, $source, $translation);
-        $results = array_merge($results, $singular_results);
-      }
-      else {
-        // Plural case.
-        $plural = $item->getTranslation();
-        foreach ($item->getSource() as $key => $source) {
-          $translation = $plural[$key];
-          $plural_results = $this->categorize($category, $source, $translation);
-          $results = array_merge($results, $plural_results);
-        }
-      }
-    }
-    return $results;
-  }
-
-  /**
-   * Helper method to categorize strings in a po file.
-   *
-   * @param string $category
-   *   The category.
-   * @param string $source
-   *   The source string.
-   * @param string $translation
-   *   The translation string.
-   *
-   * @return array $results
-   *   Array of results;
-   */
-  public function categorize($category, $source, $translation) {
-    $results = array();
-    $safe_translation = locale_string_is_safe($translation);
-    $translated = $translation != '';
-    switch ($category) {
-      case 'translated':
-        if ($safe_translation && $translated) {
-          $results[] = array(
-            'source' => SafeMarkup::checkPlain($source),
-            'translation' => SafeMarkup::checkPlain($translation),
-          );
-        }
-
-        break;
-
-      case 'untranslated':
-        if ($safe_translation && !$translated) {
-          $results[] = array(
-            'source' => SafeMarkup::checkPlain($source),
-            'translation' => SafeMarkup::checkPlain($translation),
-          );
-        }
-        break;
-
-      case 'not_allowed_translations':
-        if (!$safe_translation) {
-          $results[] = array(
-            'source' => SafeMarkup::checkPlain($source),
-            'translation' => SafeMarkup::checkPlain($translation),
-          );
-        }
-        break;
-    }
-    return $results;
   }
 
   /**
