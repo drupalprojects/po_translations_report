@@ -48,8 +48,6 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    parent::validateForm($form, $form_state);
-
     // Check if the path is for valid readable folder.
     $folder_path = $form_state->getValue('folder_path');
     if (!is_dir($folder_path)) {
@@ -66,11 +64,12 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    parent::submitForm($form, $form_state);
-
     $this->config(static::CONFIGNAME)
         ->set('folder_path', $form_state->getValue('folder_path'))
         ->save();
+
+    // Show the "configuration is saved" message.
+    parent::submitForm($form, $form_state);
 
     // Redirect to reports page.
     $route = 'po_translations_report.content';
