@@ -27,7 +27,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function getFormID() {
-    return 'potranslationsreportadmin_form';
+    return 'po_translations_report_admin_form';
   }
 
   /**

@@ -63,7 +63,7 @@ class PoTranslationsReportTest extends WebTestBase {
       'access po translations report'
     );
     $this->userCreateAndLogin($permissions);
-    $path = 'po_translations_report/settings/PoTranslationsReportAdmin';
+    $path = 'po_translations_report/admin/config/regional/po-translations-report';
     $this->drupalPostForm($path, array(
       'folder_path' => $this->getDataPath(),
         ), t('Save configuration')

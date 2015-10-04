@@ -14,7 +14,7 @@ po_translations_report.report_details:
   requirements:
     _permission: 'access po translations report'
 po_translations_report.admin_form:
-  path: '/po_translations_report/settings/PoTranslationsReportAdmin'
+  path: '/po_translations_report/admin/config/regional/po-translations-report'
   defaults:
     _form: '\Drupal\po_translations_report\Form\PoTranslationsReportAdmin'
     _title: 'Po Translations Report Setting Form'
