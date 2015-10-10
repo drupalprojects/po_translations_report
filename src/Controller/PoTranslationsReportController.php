@@ -14,6 +14,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 use Drupal\po_translations_report\PoReporter;
 use Drupal\po_translations_report\PoDetailsReporter;
+use Drupal\po_translations_report\DisplayerPluginManager;
 
 class PoTranslationsReportController extends ControllerBase {
 
@@ -39,6 +40,13 @@ class PoTranslationsReportController extends ControllerBase {
   protected $poDetailsReporter;
 
   /**
+   * DisplayerPluginManager service.
+   *
+   * @var Drupal\po_translations_report\DisplayerPluginManager
+   */
+  protected $displayerPluginManager;
+
+  /**
    * Name of the config being edited.
    */
   const CONFIGNAME = 'po_translations_report.admin_config';
@@ -48,9 +56,10 @@ class PoTranslationsReportController extends ControllerBase {
    *
    * @param PoReporter $poReporter
    */
-  public function __construct(PoReporter $poReporter, PoDetailsReporter $poDetailsReporter) {
+  public function __construct(PoReporter $poReporter, PoDetailsReporter $poDetailsReporter, DisplayerPluginManager $displayerPluginManager) {
     $this->poReporter = $poReporter;
     $this->poDetailsReporter = $poDetailsReporter;
+    $this->displayerPluginManager = $displayerPluginManager;
   }
 
   /**
@@ -58,7 +67,7 @@ class PoTranslationsReportController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-        $container->get('po_translations_report.po_reporter'), $container->get('po_translations_report.po_details_reporter')
+        $container->get('po_translations_report.po_reporter'), $container->get('po_translations_report.po_details_reporter'), $container->get('plugin.manager.po_translations_report.displayer')
     );
   }
 
@@ -101,122 +110,18 @@ class PoTranslationsReportController extends ControllerBase {
     // Add totals row at the end.
     $this->addTotalsRow();
 
-    return $this->render();
-  }
+    $config = \Drupal::configFactory()->getEditable(static::CONFIGNAME);
+    $displayer_plugin_id = $config->get('display_method');
+    if ($displayer_plugin_id) {
+      $results = $this->getReportResults();
 
-  /**
-   * Displays the results in a sortable table.
-   *
-   * @see core/includes/sorttable.inc
-   * @return array
-   *   Rendered array of results.
-   */
-  public function render() {
-    // Get categories.
-    $categories = $this->getAllowedDetailsCategries();
-    // Start by defining the header with field keys needed for sorting.
-    $header = array(
-      array(
-        'data' => t('File name'),
-        'field' => 'file_name',
-        'sort' => 'asc'),
-      array(
-        'data' => $categories['translated'],
-        'field' => 'translated',
-      ),
-      array(
-        'data' => $categories['untranslated'],
-        'field' => 'untranslated',
-      ),
-      array(
-        'data' => $categories['not_allowed_translations'],
-        'field' => 'not_allowed_translations',
-      ),
-      array(
-        'data' => t('Total Per File'),
-        'field' => 'total_per_file',
-      ),
-    );
-    // Get selected order from the request or the default one.
-    $order = tablesort_get_order($header);
-    // Get the field we sort by from the request if any.
-    $sort = tablesort_get_sort($header);
-    // Get default sorted results.
-    $results = $this->getReportResults();
-    // Honor the requested sort.
-    // Please note that we do not run any sql query against the database. The
-    // 'sql' key is simply there for tabelesort needs.
-    $rows_sorted = $this->getResultsSorted($results, $order['sql'], $sort);
-    $rows_linked = $this->linkifyResults($rows_sorted);
-    $rows = $this->addCssClasses($rows_linked);
+      $configuration = $config->get($displayer_plugin_id . '_configuration');
+      $displayer_plugin = $this->displayerPluginManager->createInstance($displayer_plugin_id, $configuration);
 
-    // Display the sorted results.
-    $display = array(
-      '#type' => 'table',
-      '#header' => $header,
-      '#rows' => $rows,
-    );
-    return $display;
-  }
-
-  /**
-   * Link all figures to the dedicated details page.
-   *
-   * @return array
-   *   Sorted array of results.
-   */
-  public function linkifyResults($results) {
-    if (!empty($results)) {
-      foreach ($results as $key => &$result) {
-        if ($key !== 'totals') {
-          if ($result['translated'] > 0) {
-            $route_params = array(
-              'file_name' => $result['file_name'],
-              'category' => 'translated',
-            );
-            $url_path = Url::fromRoute('po_translations_report.report_details', $route_params);
-            $result['translated'] = \Drupal::l($result['translated'], $url_path);
-          }
-          if ($result['untranslated'] > 0) {
-            $route_params = array(
-              'file_name' => $result['file_name'],
-              'category' => 'untranslated',
-            );
-            $url_path = Url::fromRoute('po_translations_report.report_details', $route_params);
-            $result['untranslated'] = \Drupal::l($result['untranslated'], $url_path);
-          }
-          if ($result['not_allowed_translations'] > 0) {
-            $route_params = array(
-              'file_name' => $result['file_name'],
-              'category' => 'not_allowed_translations',
-            );
-            $url_path = Url::fromRoute('po_translations_report.report_details', $route_params);
-            $result['not_allowed_translations'] = \Drupal::l($result['not_allowed_translations'], $url_path);
-          }
-        }
-      }
+      $rendered = $displayer_plugin->display($results);
+      return $rendered;
     }
-    return $results;
-  }
-
-  /**
-   * Adds css classes to results.
-   *
-   * @return array
-   *   Linkified array of results.
-   */
-  public function addCssClasses($results) {
-    if (!empty($results)) {
-      foreach ($results as $key => &$result) {
-        foreach ($result as $result_key => &$result_value) {
-          $result_value = array(
-            'data' => $result_value,
-            'class' => $result_key,
-          );
-        }
-      }
-    }
-    return $results;
+    return array();
   }
 
   /**
