@@ -12,6 +12,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\po_translations_report\DisplayerPluginManager;
+use Drupal\po_translations_report\DetailsDisplayerPluginManager;
 
 class PoTranslationsReportAdmin extends ConfigFormBase {
 
@@ -26,11 +27,17 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
   private $displayerPluginManager;
 
   /**
+   * detailsDisplayerPluginManager service.
+   */
+  private $detailsDisplayerPluginManager;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, DisplayerPluginManager $displayerPluginManager) {
+  public function __construct(ConfigFactoryInterface $config_factory, DisplayerPluginManager $displayerPluginManager, DetailsdisplayerPluginManager $detailsDisplayerPluginManager) {
     parent::__construct($config_factory);
     $this->displayerPluginManager = $displayerPluginManager;
+    $this->detailsDisplayerPluginManager = $detailsDisplayerPluginManager;
   }
 
   /**
@@ -38,7 +45,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-        $container->get('config.factory'), $container->get('plugin.manager.po_translations_report.displayer')
+        $container->get('config.factory'), $container->get('plugin.manager.po_translations_report.displayer'), $container->get('plugin.manager.po_translations_report.detailsdisplayer')
     );
   }
 
@@ -85,6 +92,23 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
     );
 
     $this->buildDisplayConfigForm($form, $form_state);
+    $form['details_display_method'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Details display method'),
+      '#description' => $this->t('Select the display method you want to use for details.'),
+      '#empty_value' => '',
+      '#options' => $this->getDetailsDisplayPluginInformations()['labels'],
+      '#default_value' => $config->get('details_display_method'),
+      '#required' => TRUE,
+      '#ajax' => array(
+        'callback' => array(get_class($this), 'buildAjaxDetailsDisplayConfigForm'),
+        'wrapper' => 'po-translations-report-details-display-config-form',
+        'method' => 'replace',
+        'effect' => 'fade',
+      ),
+    );
+
+    $this->buildDetailsDisplayConfigForm($form, $form_state);
 
     $form['submit'] = array(
       '#type' => 'submit',
@@ -106,6 +130,25 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
       'descriptions' => array()
     );
     foreach ($this->displayerPluginManager->getDefinitions() as $plugin_id => $plugin_definition) {
+      $options['labels'][$plugin_id] = Html::escape($plugin_definition['label']);
+      $options['descriptions'][$plugin_id] = Html::escape($plugin_definition['description']);
+    }
+    return $options;
+  }
+
+  /**
+   * Get definition of Details display plugins from their annotation definition.
+   *
+   * @return array
+   *   Array with 'labels' and 'descriptions' as keys containing plugin ids
+   *   and their labels or descriptions.
+   */
+  public function getDetailsDisplayPluginInformations() {
+    $options = array(
+      'labels' => array(),
+      'descriptions' => array()
+    );
+    foreach ($this->detailsDisplayerPluginManager->getDefinitions() as $plugin_id => $plugin_definition) {
       $options['labels'][$plugin_id] = Html::escape($plugin_definition['label']);
       $options['descriptions'][$plugin_id] = Html::escape($plugin_definition['description']);
     }
@@ -160,6 +203,53 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
   }
 
   /**
+   * Subform.
+   *
+   * It will be updated with Ajax to display the configuration of a
+   * details dipslay plugin method.
+   *
+   * @param array $form
+   * @param FormStateInterface $form_state
+   */
+  public function buildDetailsDisplayConfigForm(array &$form, FormStateInterface $form_state) {
+    $form['details_displayer_config'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'id' => 'po-translations-report-details-display-config-form',
+      ),
+      '#tree' => TRUE,
+    );
+    $config = $this->config(static::CONFIGNAME);
+    if ($form_state->getValue('details_display_method') != '') {
+      // It is due to the ajax.
+      $details_displayer_plugin_id = $form_state->getValue('details_display_method');
+    }
+    else {
+      $details_displayer_plugin_id = $config->get('details_display_method');
+      $ajax_submitted_empty_value = $form_state->getValue('form_id');
+    }
+    $form['details_displayer_config']['#type'] = 'details';
+    $form['details_displayer_config']['#title'] = $this->t('Configure details displayer %plugin', array('%plugin' => $this->getDetailsDisplayPluginInformations()['labels'][$details_displayer_plugin_id]));
+    $form['details_displayer_config']['#description'] = $this->getDetailsDisplayPluginInformations()['descriptions'][$details_displayer_plugin_id];
+    $form['details_displayer_config']['#open'] = TRUE;
+    // If the form is submitted with ajax and the empty value is chosen or if
+    // there is no configuration yet and no extraction method was chosen in the
+    // form.
+    if (isset($ajax_submitted_empty_value) || !$details_displayer_plugin_id) {
+      $form['details_displayer_config']['#title'] = $this->t('Please make a choice');
+      $form['details_displayer_config']['#description'] = $this->t('Please choose an details display method in the list above.');
+    }
+
+    if ($details_displayer_plugin_id && !isset($ajax_submitted_empty_value)) {
+      $configuration = $config->get($details_displayer_plugin_id . '_configuration');
+      $details_displayer_plugin = $this->detailsDisplayerPluginManager->createInstance($details_displayer_plugin_id, $configuration);
+      $details_displayer_form = $details_displayer_plugin->buildConfigurationForm(array(), $form_state);
+
+      $form['details_displayer_config'] += $details_displayer_form;
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
@@ -174,12 +264,19 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
       }
     }
     $config = $this->config(static::CONFIGNAME);
-    // If it is from the configuration.
+    // Add display method form.
     $displayer_plugin_id = $form_state->getValue('display_method');
     if ($displayer_plugin_id) {
       $configuration = $config->get($displayer_plugin_id . '_configuration');
       $displayer_plugin = $this->displayerPluginManager->createInstance($displayer_plugin_id, $configuration);
       $displayer_plugin->validateConfigurationForm($form, $form_state);
+    }
+    // Add details display method form.
+    $details_displayer_plugin_id = $form_state->getValue('details_display_method');
+    if ($details_displayer_plugin_id) {
+      $configuration = $config->get($details_displayer_plugin_id . '_configuration');
+      $details_displayer_plugin = $this->detailsDisplayerPluginManager->createInstance($details_displayer_plugin_id, $configuration);
+      $details_displayer_plugin->validateConfigurationForm($form, $form_state);
     }
   }
 
@@ -192,8 +289,9 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
         ->save();
 
     $config = $this->config(static::CONFIGNAME);
+    $editable_config = \Drupal::configFactory()->getEditable(static::CONFIGNAME);
 
-    // It is due to the ajax.
+    // Treat the displayer methods.
     $displayer_plugin_id = $form_state->getValue('display_method');
     if ($displayer_plugin_id) {
       $configuration = $config->get($displayer_plugin_id . '_configuration');
@@ -201,10 +299,21 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
       $displayer_plugin->submitConfigurationForm($form, $form_state);
     }
 
-    // Set the extraction method variable.
-    $config = \Drupal::configFactory()->getEditable(static::CONFIGNAME);
-    $config->set('display_method', $displayer_plugin_id);
-    $config->save();
+    // Set the display method variable.
+    $editable_config->set('display_method', $displayer_plugin_id);
+    $editable_config->save();
+
+    // Treat the details displayer methods.
+    $details_displayer_plugin_id = $form_state->getValue('details_display_method');
+    if ($details_displayer_plugin_id) {
+      $configuration = $config->get($details_displayer_plugin_id . '_configuration');
+      $details_displayer_plugin = $this->detailsDisplayerPluginManager->createInstance($details_displayer_plugin_id, $configuration);
+      $details_displayer_plugin->submitConfigurationForm($form, $form_state);
+    }
+
+    // Set the details display method variable.
+    $editable_config->set('details_display_method', $details_displayer_plugin_id);
+    $editable_config->save();
 
     // Show the "configuration is saved" message.
     parent::submitForm($form, $form_state);
@@ -225,6 +334,19 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
   public static function buildAjaxDisplayConfigForm(array $form, FormStateInterface $form_state) {
     // We just need to return the relevant part of the form here.
     return $form['displayer_config'];
+  }
+
+  /**
+   * Ajax callback.
+   *
+   * @param array $form
+   * @param FormStateInterface $form_state
+   *
+   * @return array
+   */
+  public static function buildAjaxDetailsDisplayConfigForm(array $form, FormStateInterface $form_state) {
+    // We just need to return the relevant part of the form here.
+    return $form['details_displayer_config'];
   }
 
 }

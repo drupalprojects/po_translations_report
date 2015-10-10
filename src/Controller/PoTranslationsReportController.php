@@ -47,6 +47,13 @@ class PoTranslationsReportController extends ControllerBase {
   protected $displayerPluginManager;
 
   /**
+   * DetailsDisplayerPluginManager service.
+   *
+   * @var Drupal\po_translations_report\DetailsDisplayerPluginManager
+   */
+  protected $detailsDisplayerPluginManager;
+
+  /**
    * Name of the config being edited.
    */
   const CONFIGNAME = 'po_translations_report.admin_config';
@@ -56,10 +63,11 @@ class PoTranslationsReportController extends ControllerBase {
    *
    * @param PoReporter $poReporter
    */
-  public function __construct(PoReporter $poReporter, PoDetailsReporter $poDetailsReporter, DisplayerPluginManager $displayerPluginManager) {
+  public function __construct(PoReporter $poReporter, PoDetailsReporter $poDetailsReporter, DisplayerPluginManager $displayerPluginManager, DetailsDisplayerPluginManager $detailsDisplayerPluginManager) {
     $this->poReporter = $poReporter;
     $this->poDetailsReporter = $poDetailsReporter;
     $this->displayerPluginManager = $displayerPluginManager;
+    $this->detailsDisplayerPluginManager = $detailsDisplayerPluginManager;
   }
 
   /**
@@ -67,7 +75,7 @@ class PoTranslationsReportController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-        $container->get('po_translations_report.po_reporter'), $container->get('po_translations_report.po_details_reporter'), $container->get('plugin.manager.po_translations_report.displayer')
+        $container->get('po_translations_report.po_reporter'), $container->get('po_translations_report.po_details_reporter'), $container->get('plugin.manager.po_translations_report.displayer'), $container->get('plugin.manager.po_translations_report.detailsdisplayer')
     );
   }
 
@@ -121,7 +129,10 @@ class PoTranslationsReportController extends ControllerBase {
       $rendered = $displayer_plugin->display($results);
       return $rendered;
     }
-    return array();
+    return array(
+        '#type' => 'markup',
+        '#markup' => '',
+      );
   }
 
   /**
@@ -269,42 +280,21 @@ class PoTranslationsReportController extends ControllerBase {
       );
     }
     else {
-      return $this->renderDetailsResults($details_array);
+        $config = \Drupal::configFactory()->getEditable(static::CONFIGNAME);
+    $details_displayer_plugin_id = $config->get('details_display_method');
+    if ($details_displayer_plugin_id) {
+
+      $configuration = $config->get($details_displayer_plugin_id . '_configuration');
+      $details_displayer_plugin = $this->detailsDisplayerPluginManager->createInstance($details_displayer_plugin_id, $configuration);
+
+      $rendered = $details_displayer_plugin->display($details_array);
+      return $rendered;
     }
-  }
-
-  /**
-   * Renders results in form of HTML table.
-   *
-   * @param array $details_array
-   *   Array of details per po file.
-   *
-   * @return string
-   *   HTML table represented results.
-   */
-  public function renderDetailsResults(array $details_array) {
-    // Start by defining the header.
-    $header = array(
-      array('data' => t('Source'), 'field' => 'source', 'sort' => 'asc'),
-      array('data' => t('Translation'), 'field' => 'translation'),
-    );
-    // Get selected order from the request or the default one.
-    $order = tablesort_get_order($header);
-    // Get the field we sort by from the request if any.
-    $sort = tablesort_get_sort($header);
-    // Honor the requested sort.
-    // Please note that we do not run any sql query against the database. The
-    // 'sql' key is simply there for tablesort needs.
-    $rows_sorted = $this->getResultsSorted($details_array, $order['sql'], $sort);
-
-    // Display the details results.
-    $display = array(
-      '#type' => 'table',
-      '#header' => $header,
-      '#rows' => $rows_sorted,
-    );
-
-    return $display;
+    return array(
+        '#type' => 'markup',
+        '#markup' => $output,
+      );
+    }
   }
 
   /**
