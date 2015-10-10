@@ -111,4 +111,5 @@ class HtmlTable extends DetailsDisplayerPluginBase {
     }
     return $results;
   }
+
 }

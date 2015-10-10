@@ -130,9 +130,9 @@ class PoTranslationsReportController extends ControllerBase {
       return $rendered;
     }
     return array(
-        '#type' => 'markup',
-        '#markup' => '',
-      );
+      '#type' => 'markup',
+      '#markup' => '',
+    );
   }
 
   /**
@@ -280,17 +280,17 @@ class PoTranslationsReportController extends ControllerBase {
       );
     }
     else {
-        $config = \Drupal::configFactory()->getEditable(static::CONFIGNAME);
-    $details_displayer_plugin_id = $config->get('details_display_method');
-    if ($details_displayer_plugin_id) {
+      $config = \Drupal::configFactory()->getEditable(static::CONFIGNAME);
+      $details_displayer_plugin_id = $config->get('details_display_method');
+      if ($details_displayer_plugin_id) {
 
-      $configuration = $config->get($details_displayer_plugin_id . '_configuration');
-      $details_displayer_plugin = $this->detailsDisplayerPluginManager->createInstance($details_displayer_plugin_id, $configuration);
+        $configuration = $config->get($details_displayer_plugin_id . '_configuration');
+        $details_displayer_plugin = $this->detailsDisplayerPluginManager->createInstance($details_displayer_plugin_id, $configuration);
 
-      $rendered = $details_displayer_plugin->display($details_array);
-      return $rendered;
-    }
-    return array(
+        $rendered = $details_displayer_plugin->display($details_array);
+        return $rendered;
+      }
+      return array(
         '#type' => 'markup',
         '#markup' => $output,
       );
