@@ -15,6 +15,7 @@ use Drupal\Core\Url;
 use Drupal\po_translations_report\PoReporter;
 use Drupal\po_translations_report\PoDetailsReporter;
 use Drupal\po_translations_report\DisplayerPluginManager;
+use Drupal\po_translations_report\DetailsDisplayerPluginManager;
 
 class PoTranslationsReportController extends ControllerBase {
 
@@ -75,7 +76,10 @@ class PoTranslationsReportController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-        $container->get('po_translations_report.po_reporter'), $container->get('po_translations_report.po_details_reporter'), $container->get('plugin.manager.po_translations_report.displayer'), $container->get('plugin.manager.po_translations_report.detailsdisplayer')
+        $container->get('po_translations_report.po_reporter'),
+        $container->get('po_translations_report.po_details_reporter'),
+        $container->get('plugin.manager.po_translations_report.displayer'),
+        $container->get('plugin.manager.po_translations_report.detailsdisplayer')
     );
   }
 
@@ -94,7 +98,7 @@ class PoTranslationsReportController extends ControllerBase {
       $url = \Drupal::l(t('configuration page'), $url_path);
       return array(
         '#type' => 'markup',
-        '#markup' => t('Please configure a directory in !url.', array('!url' => $url)),
+        '#markup' => t('Please configure a directory in @url.', array('@url' => $url)),
       );
     }
     $folder = new \DirectoryIterator($folder_path);

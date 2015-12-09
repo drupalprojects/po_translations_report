@@ -7,12 +7,13 @@
 
 namespace Drupal\po_translations_report\Form;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Component\Utility\Html;
-use Drupal\po_translations_report\DisplayerPluginManager;
 use Drupal\po_translations_report\DetailsDisplayerPluginManager;
+use Drupal\po_translations_report\DisplayerPluginManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class PoTranslationsReportAdmin extends ConfigFormBase {
 
@@ -45,7 +46,9 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-        $container->get('config.factory'), $container->get('plugin.manager.po_translations_report.displayer'), $container->get('plugin.manager.po_translations_report.detailsdisplayer')
+        $container->get('config.factory'),
+        $container->get('plugin.manager.po_translations_report.displayer'),
+        $container->get('plugin.manager.po_translations_report.detailsdisplayer')
     );
   }
 
@@ -268,6 +271,9 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
     $displayer_plugin_id = $form_state->getValue('display_method');
     if ($displayer_plugin_id) {
       $configuration = $config->get($displayer_plugin_id . '_configuration');
+      if ($configuration == NULL) {
+        $configuration = array();
+      }
       $displayer_plugin = $this->getDisplayerPluginManager()->createInstance($displayer_plugin_id, $configuration);
       $displayer_plugin->validateConfigurationForm($form, $form_state);
     }
@@ -275,6 +281,9 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
     $details_displayer_plugin_id = $form_state->getValue('details_display_method');
     if ($details_displayer_plugin_id) {
       $configuration = $config->get($details_displayer_plugin_id . '_configuration');
+      if ($configuration == NULL) {
+        $configuration = array();
+      }
       $details_displayer_plugin = $this->getDetailsDisplayerPluginManager()->createInstance($details_displayer_plugin_id, $configuration);
       $details_displayer_plugin->validateConfigurationForm($form, $form_state);
     }
@@ -295,6 +304,9 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
     $displayer_plugin_id = $form_state->getValue('display_method');
     if ($displayer_plugin_id) {
       $configuration = $config->get($displayer_plugin_id . '_configuration');
+      if ($configuration == NULL) {
+        $configuration = array();
+      }
       $displayer_plugin = $this->getDisplayerPluginManager()->createInstance($displayer_plugin_id, $configuration);
       $displayer_plugin->submitConfigurationForm($form, $form_state);
     }
@@ -307,6 +319,9 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
     $details_displayer_plugin_id = $form_state->getValue('details_display_method');
     if ($details_displayer_plugin_id) {
       $configuration = $config->get($details_displayer_plugin_id . '_configuration');
+      if ($configuration == NULL) {
+        $configuration = array();
+      }
       $details_displayer_plugin = $this->getDetailsDisplayerPluginManager()->createInstance($details_displayer_plugin_id, $configuration);
       $details_displayer_plugin->submitConfigurationForm($form, $form_state);
     }

@@ -144,7 +144,7 @@ class PoTranslationsReportTest extends WebTestBase {
     $this->drupalGet('po_translations_report');
     $url_path = Url::fromRoute('po_translations_report.admin_form');
     $url = \Drupal::l(t('configuration page'), $url_path);
-    $raw = t('Please configure a directory in !url.', array('!url' => $url));
+    $raw = t('Please configure a directory in @url.', array('@url' => $url));
     $this->assertRaw($raw, 'Expected result with no configuration');
   }
 
