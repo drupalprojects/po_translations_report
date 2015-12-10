@@ -258,22 +258,21 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Check if the path is for valid readable folder.
     $folder_path = $form_state->getValue('folder_path');
-    if (!is_dir($folder_path)) {
+    if ($folder_path == '') {
+      $form_state->setErrorByName('folder_path', $this->t('Please fill in a directory path.'));
+    }
+    elseif (!is_dir($folder_path)) {
       $form_state->setErrorByName('folder_path', $this->t('%folder_path is not a directory.', array('%folder_path' => $folder_path)));
     }
-    else {
-      if (!is_readable($folder_path)) {
-        $form_state->setErrorByName('folder_path', $this->t('%folder_path is not a readable directory.', array('%folder_path' => $folder_path)));
-      }
+    elseif (!is_readable($folder_path)) {
+      $form_state->setErrorByName('folder_path', $this->t('%folder_path is not a readable directory.', array('%folder_path' => $folder_path)));
     }
+
     $config = $this->config(static::CONFIGNAME);
     // Add display method form.
     $displayer_plugin_id = $form_state->getValue('display_method');
     if ($displayer_plugin_id) {
       $configuration = $config->get($displayer_plugin_id . '_configuration');
-      if ($configuration == NULL) {
-        $configuration = array();
-      }
       $displayer_plugin = $this->getDisplayerPluginManager()->createInstance($displayer_plugin_id, $configuration);
       $displayer_plugin->validateConfigurationForm($form, $form_state);
     }
@@ -281,9 +280,6 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
     $details_displayer_plugin_id = $form_state->getValue('details_display_method');
     if ($details_displayer_plugin_id) {
       $configuration = $config->get($details_displayer_plugin_id . '_configuration');
-      if ($configuration == NULL) {
-        $configuration = array();
-      }
       $details_displayer_plugin = $this->getDetailsDisplayerPluginManager()->createInstance($details_displayer_plugin_id, $configuration);
       $details_displayer_plugin->validateConfigurationForm($form, $form_state);
     }
@@ -304,9 +300,6 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
     $displayer_plugin_id = $form_state->getValue('display_method');
     if ($displayer_plugin_id) {
       $configuration = $config->get($displayer_plugin_id . '_configuration');
-      if ($configuration == NULL) {
-        $configuration = array();
-      }
       $displayer_plugin = $this->getDisplayerPluginManager()->createInstance($displayer_plugin_id, $configuration);
       $displayer_plugin->submitConfigurationForm($form, $form_state);
     }
@@ -319,9 +312,6 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
     $details_displayer_plugin_id = $form_state->getValue('details_display_method');
     if ($details_displayer_plugin_id) {
       $configuration = $config->get($details_displayer_plugin_id . '_configuration');
-      if ($configuration == NULL) {
-        $configuration = array();
-      }
       $details_displayer_plugin = $this->getDetailsDisplayerPluginManager()->createInstance($details_displayer_plugin_id, $configuration);
       $details_displayer_plugin->submitConfigurationForm($form, $form_state);
     }

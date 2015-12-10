@@ -1,4 +1,3 @@
-
 po_translations_report.content:
   path: '/po_translations_report'
   defaults:
