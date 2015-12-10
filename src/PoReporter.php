@@ -9,6 +9,9 @@ namespace Drupal\po_translations_report;
 
 use Drupal\Component\Gettext\PoStreamReader;
 
+/**
+ * PoReporter class.
+ */
 class PoReporter {
 
   /**

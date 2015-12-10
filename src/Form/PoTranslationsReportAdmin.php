@@ -15,6 +15,9 @@ use Drupal\po_translations_report\DetailsDisplayerPluginManager;
 use Drupal\po_translations_report\DisplayerPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Configuration form.
+ */
 class PoTranslationsReportAdmin extends ConfigFormBase {
 
   /**
@@ -23,22 +26,22 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
   const CONFIGNAME = 'po_translations_report.admin_config';
 
   /**
-   * displayerPluginManager service.
+   * DisplayerPluginManager service.
    */
   private $displayerPluginManager;
 
   /**
-   * detailsDisplayerPluginManager service.
+   * DetailsDisplayerPluginManager service.
    */
   private $detailsDisplayerPluginManager;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, DisplayerPluginManager $displayerPluginManager, DetailsdisplayerPluginManager $detailsDisplayerPluginManager) {
+  public function __construct(ConfigFactoryInterface $config_factory, DisplayerPluginManager $displayer_plugin_manager, DetailsdisplayerPluginManager $details_displayer_plugin_manager) {
     parent::__construct($config_factory);
-    $this->displayerPluginManager = $displayerPluginManager;
-    $this->detailsDisplayerPluginManager = $detailsDisplayerPluginManager;
+    $this->displayerPluginManager = $displayer_plugin_manager;
+    $this->detailsDisplayerPluginManager = $details_displayer_plugin_manager;
   }
 
   /**
@@ -62,7 +65,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'po_translations_report_admin_form';
   }
 
@@ -130,7 +133,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
   public function getDisplayPluginInformations() {
     $options = array(
       'labels' => array(),
-      'descriptions' => array()
+      'descriptions' => array(),
     );
     foreach ($this->getDisplayerPluginManager()->getDefinitions() as $plugin_id => $plugin_definition) {
       $options['labels'][$plugin_id] = Html::escape($plugin_definition['label']);
@@ -149,7 +152,7 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
   public function getDetailsDisplayPluginInformations() {
     $options = array(
       'labels' => array(),
-      'descriptions' => array()
+      'descriptions' => array(),
     );
     foreach ($this->getDetailsDisplayerPluginManager()->getDefinitions() as $plugin_id => $plugin_definition) {
       $options['labels'][$plugin_id] = Html::escape($plugin_definition['label']);
@@ -165,7 +168,9 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
    * dipslay plugin method.
    *
    * @param array $form
+   *   The form array.
    * @param FormStateInterface $form_state
+   *   The form state object.
    */
   public function buildDisplayConfigForm(array &$form, FormStateInterface $form_state) {
     $form['displayer_config'] = array(
@@ -212,7 +217,9 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
    * details dipslay plugin method.
    *
    * @param array $form
+   *   The form array.
    * @param FormStateInterface $form_state
+   *   The form state object.
    */
   public function buildDetailsDisplayConfigForm(array &$form, FormStateInterface $form_state) {
     $form['details_displayer_config'] = array(
@@ -332,9 +339,12 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
    * Ajax callback.
    *
    * @param array $form
+   *   The form array.
    * @param FormStateInterface $form_state
+   *   The form state object.
    *
    * @return array
+   *   subform
    */
   public static function buildAjaxDisplayConfigForm(array $form, FormStateInterface $form_state) {
     // We just need to return the relevant part of the form here.
@@ -345,9 +355,12 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
    * Ajax callback.
    *
    * @param array $form
+   *   The form array.
    * @param FormStateInterface $form_state
+   *   The form state object.
    *
    * @return array
+   *   subform
    */
   public static function buildAjaxDetailsDisplayConfigForm(array $form, FormStateInterface $form_state) {
     // We just need to return the relevant part of the form here.
@@ -373,4 +386,5 @@ class PoTranslationsReportAdmin extends ConfigFormBase {
   protected function getDetailsDisplayerPluginManager() {
     return $this->detailsDisplayerPluginManager ?: \Drupal::service('plugin.manager.po_translations_report.detailsdisplayer');
   }
+
 }

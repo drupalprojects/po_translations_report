@@ -25,7 +25,7 @@ abstract class DisplayerPluginBase extends PluginBase implements DisplayerPlugin
   /**
    * {@inheritdoc}
    */
-  function __construct(array $configuration, $plugin_id, $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -84,7 +84,7 @@ abstract class DisplayerPluginBase extends PluginBase implements DisplayerPlugin
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    
+
   }
 
   /**

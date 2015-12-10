@@ -10,6 +10,9 @@ namespace Drupal\po_translations_report;
 use Drupal\Component\Gettext\PoStreamReader;
 use Drupal\Component\Utility\SafeMarkup;
 
+/**
+ * PoDetailsReporter class.
+ */
 class PoDetailsReporter {
 
   /**
