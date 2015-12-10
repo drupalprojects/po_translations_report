@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\po_translations_report\PoReporter
+ * Contains Drupal\po_translations_report\PoReporter.
  */
 
 namespace Drupal\po_translations_report;
@@ -49,7 +49,14 @@ class PoReporter {
    */
   protected $totalCount = 0;
 
-  public function PoReport($filepath) {
+  /**
+   * PoReporter method.
+   *
+   * @param string $filepath
+   * @return array
+   * @throws \Exception
+   */
+  public function poReport($filepath) {
     $this->initializeProperties();
     $this->setfilePath($filepath);
     // Instantiate and initialize the stream reader for this file.
@@ -73,7 +80,6 @@ class PoReporter {
         }
       }
     }
-
 
     return array(
       'file_name' => basename($filepath),

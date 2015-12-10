@@ -12,6 +12,8 @@ use Drupal\Core\Url;
 use Drupal\po_translations_report\DetailsDisplayerPluginBase;
 
 /**
+ * Provides HtmlTable.
+ *
  * @PoTranslationsReportDetailsDisplayer(
  *   id = "html_table",
  *   label = @Translation("Html Table"),
@@ -23,7 +25,7 @@ class HtmlTable extends DetailsDisplayerPluginBase {
   /**
    * Renders results in form of an HTML table.
    *
-   * @param array $results
+   * @param array $details_array
    *   Array of details of a po file for a category.
    *
    * @return string

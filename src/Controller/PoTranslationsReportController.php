@@ -17,6 +17,9 @@ use Drupal\po_translations_report\PoDetailsReporter;
 use Drupal\po_translations_report\DisplayerPluginManager;
 use Drupal\po_translations_report\DetailsDisplayerPluginManager;
 
+/**
+ * PoTranslationsReportController class.
+ */
 class PoTranslationsReportController extends ControllerBase {
 
   /**
@@ -62,13 +65,20 @@ class PoTranslationsReportController extends ControllerBase {
   /**
    * Constructor.
    *
-   * @param PoReporter $poReporter
+   * @param PoReporter $po_reporter
+   *   reporter. 
+   * @param PoDetailsReporter $po_details_reporter
+   *   details reporter.
+   * @param DisplayerPluginManager $displayer_plugin_manager
+   *   displayer plugin manager.
+   * @param DetailsDisplayerPluginManager $details_displayer_plugin_manager
+   *   details displayer plugin manager.
    */
-  public function __construct(PoReporter $poReporter, PoDetailsReporter $poDetailsReporter, DisplayerPluginManager $displayerPluginManager, DetailsDisplayerPluginManager $detailsDisplayerPluginManager) {
-    $this->poReporter = $poReporter;
-    $this->poDetailsReporter = $poDetailsReporter;
-    $this->displayerPluginManager = $displayerPluginManager;
-    $this->detailsDisplayerPluginManager = $detailsDisplayerPluginManager;
+  public function __construct(PoReporter $po_reporter, PoDetailsReporter $po_details_reporter, DisplayerPluginManager $displayer_plugin_manager, DetailsDisplayerPluginManager $details_displayer_plugin_manager) {
+    $this->poReporter = $po_reporter;
+    $this->poDetailsReporter = $po_details_reporter;
+    $this->displayerPluginManager = $displayer_plugin_manager;
+    $this->detailsDisplayerPluginManager = $details_displayer_plugin_manager;
   }
 
   /**
@@ -106,7 +116,7 @@ class PoTranslationsReportController extends ControllerBase {
     foreach ($folder as $fileinfo) {
       if ($fileinfo->isFile() && $fileinfo->getExtension() == 'po') {
         $uri = $fileinfo->getRealPath();
-        $subresults = $this->poReporter->PoReport($uri);
+        $subresults = $this->poReporter->poReport($uri);
         $this->setReportResultsSubarray($subresults);
         // Flag we found at least one po file in this directory.
         $po_found = TRUE;

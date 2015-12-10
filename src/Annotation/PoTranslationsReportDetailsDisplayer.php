@@ -21,21 +21,21 @@ class PoTranslationsReportDetailsDisplayer extends Plugin {
   /**
    * The plugin id.
    *
-   * @var string 
+   * @var string
    */
   public $id;
 
   /**
    * The plugin label.
    *
-   * @var string 
+   * @var string
    */
   public $label;
 
   /**
    * The plugin description.
    *
-   * @var string 
+   * @var string
    */
   public $description;
 

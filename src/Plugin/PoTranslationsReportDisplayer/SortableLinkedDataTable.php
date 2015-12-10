@@ -4,6 +4,7 @@
  * @file
  * Contains \Drupal\po_translations_report\Plugin\PoTranslationsReportDisplayer\SortableLinkedDataTable.
  */
+
 namespace Drupal\po_translations_report\Plugin\PoTranslationsReportDisplayer;
 
 use Drupal\Core\Form\FormStateInterface;
@@ -11,6 +12,8 @@ use Drupal\Core\Url;
 use Drupal\po_translations_report\DisplayerPluginBase;
 
 /**
+ * Provides SortableLinkedDataTable.
+ *
  * @PoTranslationsReportDisplayer(
  *   id = "sortable_linked_data_table",
  *   label = @Translation("Sortable Linked Data Table"),
@@ -26,10 +29,11 @@ class SortableLinkedDataTable extends DisplayerPluginBase {
    *   Array of details per po file.
    *
    * @see core/includes/sorttable.inc
+   *
    * @return string
    *   HTML table represented results.
    */
-  public function display($results) {
+  public function display(array $results) {
     // Get categories.
     $categories = $this->getAllowedDetailsCategries();
     // Start by defining the header with field keys needed for sorting.
@@ -37,7 +41,8 @@ class SortableLinkedDataTable extends DisplayerPluginBase {
       array(
         'data' => t('File name'),
         'field' => 'file_name',
-        'sort' => 'asc'),
+        'sort' => 'asc',
+      ),
       array(
         'data' => $categories['translated'],
         'field' => 'translated',

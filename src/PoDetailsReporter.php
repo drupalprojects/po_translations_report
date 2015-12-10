@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\po_translations_report\PoDetialsReporter
+ * Contains Drupal\po_translations_report\PoDetialsReporter.
  */
 
 namespace Drupal\po_translations_report;

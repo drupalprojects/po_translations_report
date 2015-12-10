@@ -61,7 +61,7 @@ class PoTranslationsReportTest extends WebTestBase {
     // 'access po translations report' permission is needed after redirection.
     $permissions = array(
       'administer site configuration',
-      'access po translations report'
+      'access po translations report',
     );
     $this->userCreateAndLogin($permissions);
     $path = 'po_translations_report/admin/config/regional/po-translations-report';
@@ -181,14 +181,15 @@ class PoTranslationsReportTest extends WebTestBase {
 
   /**
    * Tests the result table with xpath for each of categories.
+   *
    * @param string $category
    *   The category.
-   * @param integer $index
+   * @param int $index
    *   The row number we are testing.
    * @param array $expected
    *   Expected result array to compare with.
    */
-  public function assertCategory($category, $index, $expected) {
+  public function assertCategory($category, $index, array $expected) {
     $value = $this->xpath("//table/tbody/tr[$index]/td[@class='" . $category . "']");
     $link = $this->xpath("//table/tbody/tr[$index]/td[@class='" . $category . "']/a");
     // Category value assert.
