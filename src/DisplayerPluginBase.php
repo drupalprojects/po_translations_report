@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\po_translations_report\DisplayerPluginBase.
+ */
+
 namespace Drupal\po_translations_report;
 
 use Drupal\Core\Form\FormStateInterface;

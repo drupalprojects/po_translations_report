@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\po_translations_report\DisplayerPluginManager.
+ */
+
 namespace Drupal\po_translations_report;
 
 use Drupal\Core\Cache\CacheBackendInterface;

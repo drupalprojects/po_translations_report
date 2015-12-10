@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\po_translations_report\Plugin\PoTranslationsReportDisplayer\SortableLinkedDataTable.
+ */
 namespace Drupal\po_translations_report\Plugin\PoTranslationsReportDisplayer;
 
 use Drupal\Core\Form\FormStateInterface;
@@ -183,7 +187,7 @@ class SortableLinkedDataTable extends DisplayerPluginBase {
    */
   public function addCssClasses($results) {
     if (!empty($results)) {
-      foreach ($results as $key => &$result) {
+      foreach ($results as &$result) {
         foreach ($result as $result_key => &$result_value) {
           $result_value = array(
             'data' => $result_value,

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\po_translations_report\Plugin\PoTranslationsReportDetailsDisplayer\HtmlTable.
+ */
+
 namespace Drupal\po_translations_report\Plugin\PoTranslationsReportDetailsDisplayer;
 
 use Drupal\Core\Form\FormStateInterface;

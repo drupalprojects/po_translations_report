@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\po_translations_report\Annotation\PoTranslationsReportDisplayer.
+ */
+
 namespace Drupal\po_translations_report\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

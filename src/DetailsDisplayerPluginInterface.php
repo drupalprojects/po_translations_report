@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\po_translations_report\DetailsDisplayerPluginInterface.
+ */
+
 namespace Drupal\po_translations_report;
 
 use Drupal\Core\Plugin\PluginFormInterface;
