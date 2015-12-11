@@ -39,7 +39,7 @@ abstract class DetailsDisplayerPluginBase extends PluginBase implements DetailsD
   /**
    * {@inheritdoc}
    */
-  public function display($results) {
+  public function display(array $results) {
     $display = array(
       '#type' => 'table',
       '#header' => array(),

@@ -31,7 +31,7 @@ class HtmlTable extends DetailsDisplayerPluginBase {
    * @return string
    *   HTML table represented results.
    */
-  public function display($details_array) {
+  public function display(array $details_array) {
     // Start by defining the header.
     $header = array(
       array('data' => t('Source'), 'field' => 'source', 'sort' => 'asc'),

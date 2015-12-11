@@ -53,8 +53,13 @@ class PoReporter {
    * PoReporter method.
    *
    * @param string $filepath
-   * @return array
-   * @throws \Exception
+   *   The file path.
+   *
+   * @return
+   *   Array of data.
+   *
+   * @throws
+   *  Exception.
    */
   public function poReport($filepath) {
     $this->initializeProperties();

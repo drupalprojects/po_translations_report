@@ -66,13 +66,13 @@ class PoTranslationsReportController extends ControllerBase {
    * Constructor.
    *
    * @param PoReporter $po_reporter
-   *   reporter. 
+   *   Reporter.
    * @param PoDetailsReporter $po_details_reporter
-   *   details reporter.
+   *   Details reporter.
    * @param DisplayerPluginManager $displayer_plugin_manager
-   *   displayer plugin manager.
+   *   Displayer plugin manager.
    * @param DetailsDisplayerPluginManager $details_displayer_plugin_manager
-   *   details displayer plugin manager.
+   *   Details displayer plugin manager.
    */
   public function __construct(PoReporter $po_reporter, PoDetailsReporter $po_details_reporter, DisplayerPluginManager $displayer_plugin_manager, DetailsDisplayerPluginManager $details_displayer_plugin_manager) {
     $this->poReporter = $po_reporter;

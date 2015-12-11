@@ -21,7 +21,7 @@ interface DisplayerPluginInterface extends PluginFormInterface, ConfigurablePlug
    * Extract method.
    *
    * @param array $results
-   *   array of results to display.
+   *   Array of results to display.
    */
   public function display(array $results);
 

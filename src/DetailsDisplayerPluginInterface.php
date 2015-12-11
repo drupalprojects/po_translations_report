@@ -21,8 +21,8 @@ interface DetailsDisplayerPluginInterface extends PluginFormInterface, Configura
    * Extract method.
    *
    * @param array $results
-   *   array of results to display.
+   *   Array of results to display.
    */
-  public function display($results);
+  public function display(array $results);
 
 }
