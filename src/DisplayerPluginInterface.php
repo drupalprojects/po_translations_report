@@ -23,6 +23,6 @@ interface DisplayerPluginInterface extends PluginFormInterface, ConfigurablePlug
    * @param array $results
    *   array of results to display.
    */
-  public function display($results);
+  public function display(array $results);
 
 }

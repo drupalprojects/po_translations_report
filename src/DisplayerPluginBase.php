@@ -39,7 +39,7 @@ abstract class DisplayerPluginBase extends PluginBase implements DisplayerPlugin
   /**
    * {@inheritdoc}
    */
-  public function display($results) {
+  public function display(array $results) {
     $display = array(
       '#type' => 'table',
       '#header' => array(),

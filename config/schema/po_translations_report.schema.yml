@@ -17,5 +17,5 @@ po_translations_report.admin_config:
       type: string
       label: 'Details display method'
     html_table_configuration:
-      type: string
+      type: mapping
       label: 'Configuration parameters for html_table method'
