@@ -55,10 +55,10 @@ class PoReporter {
    * @param string $filepath
    *   The file path.
    *
-   * @return
+   * @return array
    *   Array of data.
    *
-   * @throws
+   * @throws \Exception
    *  Exception.
    */
   public function poReport($filepath) {
